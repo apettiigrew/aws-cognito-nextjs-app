@@ -1,0 +1,9 @@
+@use './functions' as f;
+@use './colors' as c;
+@use './var' as v;
+
+
+@mixin input-box-borders {
+    border: f.rem(1.4) solid c.color(neutral-black);
+    border-radius: f.rem(v.get-radius(desktop));
+}

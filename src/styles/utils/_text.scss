@@ -1,0 +1,32 @@
+@use './colors' as c;
+@use './functions' as f;
+@use './fonts' as fs;
+@use './media-queries' as mq;
+
+$default-text-color: c.color(neutral-black);
+
+@mixin h5-styles() {
+	color: $default-text-color;
+	font-family: fs.ff(primary);
+	font-weight: 700;
+	font-size: fs.fs(23.04);
+	margin-bottom: f.rem(10);
+}
+
+@mixin h6-styles() {
+	color: $default-text-color;
+	font-family: fs.ff(primary);
+	font-weight: 700;
+	font-size: fs.fs(19.2);
+	margin-bottom: f.rem(10);
+}
+
+@mixin p-styles {
+	color: $default-text-color;
+	font-family: fs.ff(primary);
+	font-weight: 400;
+	font-style: normal;
+	font-size: fs.fs(16);
+	line-height: 1.5;
+	margin-bottom: f.rem(10);
+}

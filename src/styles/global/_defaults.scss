@@ -1,0 +1,61 @@
+@use './../utils/index' as u;
+
+:root {
+    // These serve as a basic backup
+    --primary-marine-blue: #142F49;
+    --primary-purplish-blue: #5850EC;
+    --primary-pastel-blue: #C7D2FE;
+    --primary-light-blue: #B2D9E9;
+    --primary-strawberry-red: #EF4444;
+
+    --neutral-cool-gray: #A3A3A3;
+    --neutral-light-gray: #E5E7EB;
+    --neutral-magnolia: #F0F9FF;
+    --neutral-alabaster: #F8FAFC;
+    --neutral-white: #FFFFFF;
+}
+
+html,
+body {
+    // Not sure if we need this as a fallback?
+    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+        Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    background-color: u.color(neutral-white);
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+
+    // To make page content always occupy full viewport height
+    &>#__next {
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
+
+    &.no-scroll {
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+h5 {
+    @include u.h5-styles();
+}
+
+h6 {
+    @include u.h6-styles();
+}
+
+p {
+    @include u.p-styles();
+}

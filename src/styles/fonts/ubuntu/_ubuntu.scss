@@ -1,0 +1,37 @@
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('/static/fonts/Ubuntu-Bold.eot');
+    src: url('/static/fonts/Ubuntu-Bold.eot?#iefix') format('embedded-opentype'),
+        url('/static/fonts/Ubuntu-Bold.woff2') format('woff2'),
+        url('/static/fonts/Ubuntu-Bold.woff') format('woff'),
+        url('/static/fonts/Ubuntu-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('/static/fonts/Ubuntu-Medium.eot');
+    src: url('/static/fonts/Ubuntu-Medium.eot?#iefix') format('embedded-opentype'),
+        url('/static/fonts/Ubuntu-Medium.woff2') format('woff2'),
+        url('/static/fonts/Ubuntu-Medium.woff') format('woff'),
+        url('/static/fonts/Ubuntu-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('/static/fonts/Ubuntu-Regular.eot');
+    src: url('/static/fonts/Ubuntu-Regular.eot?#iefix') format('embedded-opentype'),
+        url('/static/fonts/Ubuntu-Regular.woff2') format('woff2'),
+        url('/static/fonts/Ubuntu-Regular.woff') format('woff'),
+        url('/static/fonts/Ubuntu-Regular.ttf') format('truetype');
+    
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

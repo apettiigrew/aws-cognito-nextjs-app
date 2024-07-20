@@ -1,0 +1,37 @@
+@use "./../../../styles/utils/index" as u;
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox input {
+    margin-right: 8px;
+}
+
+.checkbox-label {
+    cursor: pointer;
+}
+
+.input {
+    cursor: pointer;
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.input {
+    width: min-content;
+    margin-right: u.rem(8);
+}
+
+.error-text {
+    font-size: u.rem(16);
+    line-height: u.rem(18);
+    color: u.color(error);
+    font-weight: 400;
+}

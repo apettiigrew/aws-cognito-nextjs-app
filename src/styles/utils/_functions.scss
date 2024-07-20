@@ -1,0 +1,26 @@
+@use 'sass:math';
+
+//https://css-tricks.com/snippets/sass/px-to-em-functions/
+$browser-context: 16;
+
+// Pixels to em
+@function em($pixels, $context: $browser-context) {
+	@return #{math.div($pixels,$context)}em;
+}
+
+// Pixels to rem
+@function rem($pixels, $context: $browser-context) {
+	@return #{math.div($pixels,$context)}rem;
+}
+
+// Pixels to vw value. For high resolutions
+@function px_to_vw($value) {
+	$calc: math.div($value, 1920) * 100;
+	@return unquote($calc + 'vw');
+}
+
+// Rem to vw value. For high resolutions
+@function rem_to_vw($value) {
+	$calc: math.div(($value * 16), 1920) * 100;
+	@return unquote($calc + 'vw');
+}

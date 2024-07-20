@@ -1,0 +1,21 @@
+@use "./../../../styles/utils/index" as u;
+
+$padding-top: 100;
+$inner-content-heading-space: 40;
+$gap: 30;
+
+
+.right-content-headings {
+    margin-bottom: u.rem($inner-content-heading-space);
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    gap: u.rem($gap);
+    margin-bottom: u.rem($gap);
+
+    &>* {
+        width: 60%;
+    }
+}

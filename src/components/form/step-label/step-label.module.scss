@@ -1,0 +1,17 @@
+@use "./../../../styles/utils" as u;
+
+.container {
+    display: flex;
+    gap: u.rem(10);
+    align-items: center;
+}
+
+.icon-container {
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.label {
+    margin-bottom: 0;
+}

@@ -1,0 +1,8 @@
+// values are in px
+$radius: (
+    desktop: 4,
+);
+
+@function get-radius($key) {
+    @return map-get($map: $radius, $key: $key);
+}

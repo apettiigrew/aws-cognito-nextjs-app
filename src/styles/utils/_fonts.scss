@@ -1,0 +1,44 @@
+@use './functions' as f;
+@use './media-queries' as mq;
+
+// FAMILIES
+
+$primary-font-family: #{'Ubuntu', sans-serif};
+
+$font-families:
+(
+	primary: $primary-font-family,
+);
+
+// E.g. ff(primary)
+@function ff($key)
+{
+	@return map-get($map: $font-families, $key: $key)
+};
+
+// SIZE
+@function fs($px, $function:rem)
+{
+	@if $function == vw {
+		@return f.px_to_vw($px);
+	} @else {
+		@return f.rem($px);
+	}
+}
+
+@mixin fs-mq($px, $platform)
+{
+	@include mq.mqw-from($platform)
+	{
+		font-size: fs($px, rem);
+	}
+
+	// Also include
+	@if $platform == desktop
+	{
+		@include mq.mqw-from(hr)
+		{
+			font-size: fs($px, vw);
+		}
+	}
+}

@@ -1,0 +1,8 @@
+@use "./../../../styles/utils/index" as u;
+
+.error {
+    font-size: u.rem(16);
+    line-height: u.rem(18);
+    color: u.color(error);
+    font-weight: 400;
+}

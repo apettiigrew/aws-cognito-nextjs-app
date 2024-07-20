@@ -1,0 +1,195 @@
+@use './functions' as f;
+@use './media-queries' as mq;
+
+// WIDTH
+
+@mixin width($px, $function:rem)
+{
+	@if $px == auto {
+		width: $px;
+	} @else if $function == vw {
+		width: f.px_to_vw($px);
+	} @else {
+		width: f.rem($px);
+	}
+}
+
+@mixin width-mq($px, $platform)
+{
+	@include mq.mqw-from($platform)
+	{
+		@include width($px);
+	}
+
+	@if $platform == desktop
+	{
+		@include mq.mqw-from(hr){
+			@include width($px, vw);
+		}
+	}
+}
+
+@mixin min-width($px, $function:rem)
+{
+	@if $px == auto {
+		min-width: $px;
+	} @else if $function == vw {
+		min-width: f.px_to_vw($px);
+	} @else {
+		min-width: f.rem($px);
+	}
+}
+
+@mixin min-width-mq($px, $platform)
+{
+	@include mq.mqw-from($platform)
+	{
+		@include min-width($px);
+	}
+
+	@if $platform == desktop
+	{
+		@include mq.mqw-from(hr){
+			@include min-width($px, vw);
+		}
+	}
+}
+
+@mixin max-width($px, $function:rem)
+{
+	@if $px == auto {
+		width: $px;
+	} @else if $function == vw {
+		max-width: f.px_to_vw($px);
+	} @else {
+		max-width: f.rem($px);
+	}
+}
+
+@mixin max-width-mq($px, $platform)
+{
+	@include mq.mqw-from($platform)
+	{
+		@include max-width($px);
+	}
+
+	@if $platform == desktop
+	{
+		@include mq.mqw-from(hr){
+			@include max-width($px, vw);
+		}
+	}
+}
+
+
+// HEIGHT
+
+@mixin height($px, $function:rem)
+{
+	@if $px == auto {
+		height: $px;
+	} @else if $function == vw {
+		height: f.px_to_vw($px);
+	} @else {
+		height: f.rem($px);
+	}
+}
+
+@mixin height-mq($px, $platform)
+{
+	@include mq.mqw-from($platform)
+	{
+		@include height($px);
+	}
+
+	@if $platform == desktop
+	{
+		@include mq.mqw-from(hr){
+			@include height($px, vw);
+		}
+	}
+}
+
+@mixin min-height($px, $function:rem)
+{
+	@if $px == auto {
+		min-height: $px;
+	} @else if $function == vw {
+		min-height: f.px_to_vw($px);
+	} @else {
+		min-height: f.rem($px);
+	}
+}
+
+@mixin min-height-mq($px, $platform)
+{
+	@include mq.mqw-from($platform)
+	{
+		@include min-height($px);
+	}
+
+	@if $platform == desktop
+	{
+		@include mq.mqw-from(hr){
+			@include min-height($px, vw);
+		}
+	}
+}
+
+@mixin max-height($px, $function:rem)
+{
+	@if $px == auto {
+		height: $px;
+	} @else if $function == vw {
+		max-height: f.px_to_vw($px);
+	} @else {
+		max-height: f.rem($px);
+	}
+}
+
+@mixin max-height-mq($px, $platform)
+{
+	@include mq.mqw-from($platform)
+	{
+		@include max-height($px);
+	}
+
+	@if $platform == desktop
+	{
+		@include mq.mqw-from(hr){
+			@include max-height($px, vw);
+		}
+	}
+}
+
+
+// SQUARE
+
+@mixin square($px, $function:rem)
+{
+	@if type-of($px) != number {
+		width: $px;
+		height: $px;
+	} @else if $function == vw {
+		width: f.px_to_vw($px);
+		height: f.px_to_vw($px);
+	} @else {
+		width: f.rem($px);
+		height: f.rem($px);
+	}
+}
+
+@mixin square-mq($px, $platform)
+{
+	@include mq.mqw-from($platform)
+	{
+		@include width($px);
+	}
+
+	@if $platform == desktop
+	{
+		@include mq.mqw-from(hr){
+			@include width($px, vw);
+		}
+	}
+}

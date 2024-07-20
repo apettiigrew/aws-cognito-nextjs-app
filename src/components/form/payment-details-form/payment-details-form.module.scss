@@ -1,0 +1,12 @@
+@use "./../../../styles/utils" as u;
+
+$gap: 30;
+
+.input-group {
+    display: flex;
+    gap: u.rem($gap);
+
+    &>* {
+        flex: 1 0;
+    }
+}

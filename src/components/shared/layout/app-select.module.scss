@@ -1,0 +1,74 @@
+@use "./../../../styles/utils/index" as u;
+
+.custom-select {
+    position: relative;
+}
+
+.select-input {
+    @include u.input-box-borders();
+    padding: u.rem(12) u.rem(20);
+    margin: u.rem(8) 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 u.rem(1) u.rem(2) rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease;
+    &.error {
+        border: u.rem(2) solid u.color(error);
+    }
+}
+
+.select-input:after {
+    content: '\25BC';
+    font-size: u.rem(12);
+    color: u.color(neutral-cool-gray);
+}
+
+.select-input:hover {
+    box-shadow: u.rem(0) u.rem(2) u.rem(3) rgba(0, 0, 0, 0.2);
+}
+
+.select-dropdown {
+    position: absolute;
+    top: calc(100% + u.rem(5));
+    left: 0;
+    right: 0;
+    border: u.rem(1) solid u.color(neutral-light-gray);
+    border-radius: u.rem(5);
+    background-color: u.color(neutral-white);
+    z-index: 1000;
+    max-height: u.rem(200);
+    overflow-y: auto;
+    box-shadow: u.rem(0) u.rem(1) u.rem(2) rgba(0, 0, 0, 0.15);
+}
+
+.select-option {
+    padding: u.rem(12) u.rem(16);
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.select-option:hover {
+    background-color: u.color(neutral-cool-gray);
+}
+
+.select-option.selected {
+    font-weight: bold;
+    background-color: u.color(neutral-alabaster);
+}
+
+.label {
+    font-size: u.rem(16);
+    line-height: u.rem(18);
+    color: u.color(neutral-cool-gray);
+    font-weight: 400;
+}
+
+
+.error-text {
+    font-size: u.rem(16);
+    line-height: u.rem(18);
+    color: u.color(error);
+    font-weight: 400;
+}

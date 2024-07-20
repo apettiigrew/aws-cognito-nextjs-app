@@ -1,0 +1,42 @@
+@use "./../../../styles/utils/index" as u;
+
+.input-field {
+    width: 100%;
+    /* Adjust as needed */
+    padding: u.rem(12) u.rem(20);
+    margin: u.rem(8) 0;
+    box-sizing: border-box;
+    @include u.input-box-borders();
+    // border: u.rem(1.4) solid u.color(neutral-black);
+    // border-radius: u.rem(u.get-radius(desktop));
+    font-size: u.rem(16);
+    font-family: 'Arial', sans-serif;
+    transition: border-color 0.3s, box-shadow 0.3s;
+
+    &.error {
+        border: u.rem(2) solid u.color(error);
+    }
+}
+
+.input-field:focus {
+    border-color: u.color(neutral-black);
+    outline: none;
+}
+
+.label {
+    font-size: u.rem(16);
+    line-height: u.rem(18);
+    color: u.color(neutral-cool-gray);
+    font-weight: 400;
+
+    &.error {
+        color: u.color(error);
+    }
+}
+
+.error-text {
+    font-size: u.rem(16);
+    line-height: u.rem(18);
+    color: u.color(error);
+    font-weight: 400;
+}

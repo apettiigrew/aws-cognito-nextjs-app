@@ -1,0 +1,101 @@
+@use './functions'as f;
+
+// In pixels.
+// -> Keep in sync with css-vars.ts ! <-
+$width-breakpoints: (
+	phone: 370, // Bigger than some of the smallest phones. Only needed in exceptions
+	tablet_p: 600, // Tablet portrait
+	tablet_l: 900, // Tablet landscape
+	desktop_s: 1400, // Desktop small -> e.g. macbook pro 13″ = 1440px
+	desktop: 1800, // Desktop
+	hr: 2048, // High resolutions
+);
+
+@function get-bp($key)
+{
+	@return map-get($map: $width-breakpoints, $key: $key);
+}
+
+// WIDTHS
+
+@mixin mqw-from-px($pixels) {
+	@media only screen and (min-width:f.em($pixels)) {
+		@content;
+	}
+}
+@mixin mqw-from($breakPoint) {
+	$pixels: map-get($map: $width-breakpoints, $key: $breakPoint);
+
+	@media only screen and (min-width:f.em($pixels)) {
+		@content;
+	}
+}
+
+@mixin mqw-to($breakPoint) {
+	$pixels: map-get($map: $width-breakpoints, $key: $breakPoint);
+
+	@media only screen and (max-width:f.em($pixels)) {
+		@content;
+	}
+}
+
+@mixin mqw($fromBreakPoint, $toBreakPoint) {
+	$fromPixels: map-get($map: $width-breakpoints, $key: $fromBreakPoint);
+	$toPixels: map-get($map: $width-breakpoints, $key: $toBreakPoint);
+
+	@media only screen and (min-width:f.em($fromPixels)) and (max-width:f.em($toPixels)) {
+		@content;
+	}
+}
+
+@mixin mqw-px($fromPixels, $toPixels) {
+
+	@media only screen and (min-width:f.em($fromPixels)) and (max-width:f.em($toPixels)) {
+		@content;
+	}
+}
+
+// HEIGHT
+
+@mixin mqh-to($breakPoint) {
+	$pixels: map-get($map: $width-breakpoints, $key: $breakPoint);
+
+	@media only screen and (max-height:f.em($pixels)) {
+		@content;
+	}
+}
+
+@mixin mqh-from($breakPoint) {
+	$pixels: map-get($map: $width-breakpoints, $key: $breakPoint);
+
+	@media only screen and (min-height:f.em($pixels)) {
+		@content;
+	}
+}
+
+
+// DEVICE SPECIFIC
+
+@mixin mq-touch() {
+	@media(pointer:coarse) {
+		@content;
+	}
+}
+
+@mixin mq-mouse() {
+	@media(pointer:fine) {
+		@content;
+	}
+}
+
+@mixin has-hover() {
+	@media(hover:hover) {
+		@content;
+	}
+}
+
+@mixin no-hover() {
+	@media(hover:none) {
+		@content;
+	}
+}
