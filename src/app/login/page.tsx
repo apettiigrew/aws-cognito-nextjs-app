@@ -79,7 +79,7 @@ function MobileLoginView() {
                                         // disabled={!sValid}
                                         type="button"
                                         ariaLabel="Submit button"
-                                        variation={AppButtonVariation.primaryDefault}
+                                        variation={AppButtonVariation.primaryWhiteBorder}
                                         className={styles["button-with-icon"]}
                                     // onClick={() => { handleSubmit(formik) }}
                                     >
