@@ -8,7 +8,8 @@ import { AppSection } from "@/components/shared/layout/app-section";
 import styles from "./page.module.scss"
 import { InputField } from "@/components/shared/layout/input-field";
 import { AppButton, AppButtonVariation } from "@/components/shared/layout/buttons";
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
+import { GoogleIcon } from "@/components/shared/icons/icons";
 
 const initialValues = {
     email: "",
@@ -19,32 +20,9 @@ export default function LoginPage() {
     const deviceInfoContext = useContext(DeviceInfoContext);
     const isMobile = deviceInfoContext.breakPoint === BreakpointPlatform.phone;
     return (
-        <AppSection id="sign-in" className={styles.root}>
-            <AppContainer>
-                <Formik
-                    initialValues={initialValues}
-                    onSubmit={() => { }}
-                    validateOnMount={true}
-                >
-                    <Form>
-
-                        {isMobile ? <MobileLoginView /> : <DesktopLoginView />}
-
-                        <AppButton
-                            // disabled={!sValid}
-                            type="button"
-                            ariaLabel="Submit button"
-                            variation={AppButtonVariation.primaryDefault}
-                            className={styles["login-button"]}
-                        // onClick={() => { handleSubmit(formik) }}
-                        >
-                            Login
-                        </AppButton>
-                    </Form>
-                </Formik>
-            </AppContainer>
-        </AppSection>
-
+        <>
+            {isMobile ? <MobileLoginView /> : <DesktopLoginView />}
+        </>
     );
 }
 
@@ -53,28 +31,69 @@ interface MobileLoginViewProps {
 }
 function MobileLoginView() {
     return (
-        <div className={styles.container}>
-            <SubHeading className={styles.heading}>Login</SubHeading>
-            <div>
-                <InputField
-                    // className={styles["form-field"]}
-                    type="text"
-                    name="email"
-                    label="Email"
-                    required={true}
-                // validate={validateFirstName}
-                />
-                <InputField
-                    type="password"
-                    name="password"
-                    label="Password"
-                    required={true}
-                // validate={validateFirstName}
-                />
-                <p>Forget Password</p>
-            </div>
-        </div>
+        <AppSection id="sign-in" className={styles.root}>
+            <AppContainer>
+                <div className={styles.container}>
+                    <SubHeading className={styles.heading}>Login</SubHeading>
+                    <div>
+                        <Formik
+                            initialValues={initialValues}
+                            onSubmit={() => { }}
+                            validateOnMount={true}
+                        >
+                            {(formik) => (
+                                <>
+                                    <InputField
+                                        // className={styles["form-field"]}
+                                        type="text"
+                                        name="email"
+                                        label="Email"
+                                        required={true}
+                                    // validate={validateFirstName}
+                                    />
+                                    <InputField
+                                        type="password"
+                                        name="password"
+                                        label="Password"
+                                        required={true}
+                                    // validate={validateFirstName}
+                                    />
+                                    <p>Forget Password</p>
+                                    <AppButton
+                                        // disabled={!sValid}
+                                        type="button"
+                                        ariaLabel="Submit button"
+                                        variation={AppButtonVariation.primaryDefault}
+                                        className={styles["login-button"]}
+                                    // onClick={() => { handleSubmit(formik) }}
+                                    >
+                                        Login
+                                    </AppButton>
 
+                                    <div className={styles["horizontal-line"]}>
+                                        <hr className={styles.line} />
+                                        <small className={"border-text"}>or</small>
+                                        <hr className={styles.line} />
+                                    </div>
+                                    <AppButton
+                                        // disabled={!sValid}
+                                        type="button"
+                                        ariaLabel="Submit button"
+                                        variation={AppButtonVariation.primaryDefault}
+                                        className={styles["button-with-icon"]}
+                                    // onClick={() => { handleSubmit(formik) }}
+                                    >
+                                        <GoogleIcon className={styles["button-icon"]} />
+                                        Continue With Google
+                                    </AppButton>
+                                </>
+                            )}
+
+                        </Formik>
+                    </div>
+                </div>
+            </AppContainer>
+        </AppSection>
     )
 }
 
