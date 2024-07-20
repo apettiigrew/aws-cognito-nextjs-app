@@ -1,5 +1,9 @@
 @use "./../../../styles/utils/index" as u;
 
+
+.form-control{
+    margin-bottom: u.rem(20);
+}
 .input-field {
     width: 100%;
     /* Adjust as needed */

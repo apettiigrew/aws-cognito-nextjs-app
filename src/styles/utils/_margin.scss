@@ -1,0 +1,241 @@
+@use './functions' as f;
+@use './media-queries' as mq;
+
+// ALL
+
+@mixin margin($values, $function: rem) {
+	$type: type-of($values);
+
+	@if $type ==number {
+		@if $function ==vw {
+			margin: f.px_to_vw($values);
+		}
+
+		@else {
+			margin: f.rem($values);
+		}
+	}
+
+	@else if $type ==list {
+		$result: (
+		);
+
+	@for $i from 0 to length($values) {
+		$value: nth($values, $i + 1);
+
+		@if type-of($value)==number {
+			@if $function ==vw {
+				$result: append($result, f.px_to_vw($value), $separator: space)
+			}
+
+			@else {
+				$result: append($result, f.rem($value), $separator: space)
+			}
+		}
+
+		@else {
+			$result: append($result, $value, $separator: space)
+		}
+	}
+
+	margin: $result;
+}
+
+@else {
+	margin: $values;
+}
+}
+
+@mixin margin-mq($values, $platform) {
+	@include mq.mqw-from($platform) {
+		@include margin($values);
+	}
+
+	@if $platform ==desktop {
+		@include mq.mqw-from(hr) {
+			@include margin($values, vw);
+		}
+	}
+}
+
+// HORIZONTAL
+
+@mixin margin-x($px, $function: rem) {
+	@if type-of($value: $px) !=number {
+		margin-left: $px;
+		margin-right: $px;
+	}
+
+	@else if $function ==vw {
+		margin-left: f.px_to_vw($px);
+		margin-right: f.px_to_vw($px);
+	}
+
+	@else {
+		margin-left: f.rem($px);
+		margin-right: f.rem($px);
+	}
+}
+
+@mixin margin-x-mq($px, $platform) {
+	@include mq.mqw-from($platform) {
+		@include margin-x($px);
+	}
+
+	@if $platform ==desktop {
+		@include mq.mqw-from(hr) {
+			@include margin-x($px, vw);
+		}
+	}
+}
+
+// VERTICAL
+
+@mixin margin-y($px, $function: rem) {
+	@if type-of($value: $px) !=number {
+		margin-top: $px;
+		margin-bottom: $px;
+	}
+
+	@else if $function ==vw {
+		margin-top: f.px_to_vw($px);
+		margin-bottom: f.px_to_vw($px);
+	}
+
+	@else {
+		margin-top: f.rem($px);
+		margin-bottom: f.rem($px);
+	}
+}
+
+@mixin margin-y-mq($px, $platform) {
+	@include mq.mqw-from($platform) {
+		@include margin-x($px);
+	}
+
+	@if $platform ==desktop {
+		@include mq.mqw-from(hr) {
+			@include margin-x($px, vw);
+		}
+	}
+}
+
+// SINGLES
+
+@mixin margin-l($px, $function: rem) {
+	@if type-of($value: $px) !=number {
+		margin-left: $px;
+	}
+
+	@else if $function ==vw {
+		margin-left: f.px_to_vw($px);
+	}
+
+	@else {
+		margin-left: f.rem($px);
+	}
+}
+
+@mixin margin-l-mq($px, $platform) {
+	@include mq.mqw-from($platform) {
+		@include margin-l($px);
+	}
+
+	@if $platform ==desktop {
+		@include mq.mqw-from(hr) {
+			@include margin-l($px, vw);
+		}
+	}
+}
+
+@mixin margin-r($px, $function: rem) {
+	@if type-of($value: $px) !=number {
+		margin-right: $px;
+	}
+
+	@else if $function ==vw {
+		margin-right: f.px_to_vw($px);
+	}
+
+	@else {
+		margin-right: f.rem($px);
+	}
+}
+
+@mixin margin-r-mq($px, $platform) {
+	@include mq.mqw-from($platform) {
+		@include margin-r($px);
+	}
+
+	@if $platform ==desktop {
+		@include mq.mqw-from(hr) {
+			@include margin-r($px, vw);
+		}
+	}
+}
+
+@mixin margin-t($px, $function: rem) {
+	@if type-of($value: $px) !=number {
+		margin-top: $px;
+	}
+
+	@else if $function ==vw {
+		margin-top: f.px_to_vw($px);
+	}
+
+	@else {
+		margin-top: f.rem($px);
+	}
+}
+
+@mixin margin-t-mq($px, $platform) {
+	@include mq.mqw-from($platform) {
+		@include margin-t($px);
+	}
+
+	@if $platform ==desktop {
+		@include mq.mqw-from(hr) {
+			@include margin-t($px, vw);
+		}
+	}
+}
+
+@mixin margin-b($px, $function: rem) {
+	@if type-of($value: $px) !=number {
+		margin-bottom: $px;
+	}
+
+	@else if $function ==vw {
+		margin-bottom: f.px_to_vw($px);
+	}
+
+	@else {
+		margin-bottom: f.rem($px);
+	}
+}
+
+@mixin margin-b-mq($px, $platform) {
+	@include mq.mqw-from($platform) {
+		@include margin-b($px);
+	}
+
+	@if $platform ==desktop {
+		@include mq.mqw-from(hr) {
+			@include margin-b($px, vw);
+		}
+	}
+}
+
+// Used as the default bottom margin spacing for most components
+@mixin default-margin-b() {
+	margin-bottom: f.rem(20);
+	@include mq.mqw-from(desktop_s) {
+		margin-bottom: f.rem(26);
+	}
+	@include mq.mqw-from(desktop) {
+		margin-bottom: f.rem(34);
+	}
+	@include mq.mqw-from(hr) {
+		margin-bottom: f.px_to_vw(34);
+	}
+}

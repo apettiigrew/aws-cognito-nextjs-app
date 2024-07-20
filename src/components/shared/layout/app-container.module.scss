@@ -1,0 +1,112 @@
+@use "./../../../styles/utils/index" as u;
+
+.root {
+
+	&:not(.use-padding){
+		@include u.margin-x(auto);
+		@include u.container(phone);
+
+		&.small {
+			@include u.container(phone, max-width, s);
+		}
+
+	}
+
+	&.use-padding {
+		@include u.container(phone, padding);
+
+		&.small {
+			@include u.container(phone, padding, s);
+		}
+	}
+
+	@include u.mqw-from(tablet_p) {
+		&:not(.use-padding){
+			@include u.container(tablet_p);
+
+			&.small {
+				@include u.container(tablet_p, max-width, s);
+			}
+		}
+
+		&.use-padding {
+			@include u.container(tablet_p, padding);
+
+			&.small {
+				@include u.container(tablet_p, padding, s);
+			}
+		}
+	}
+
+	@include u.mqw-from(tablet_l) {
+		&:not(.use-padding){
+			@include u.container(tablet_l);
+
+			&.small {
+				@include u.container(tablet_l, max-width, s);
+			}
+		}
+
+		&.use-padding {
+			@include u.container(tablet_l, padding);
+
+			&.small {
+				@include u.container(tablet_l, padding, s);
+			}
+		}
+	}
+
+	@include u.mqw-from(desktop_s) {
+		&:not(.use-padding){
+			@include u.container(desktop_s);
+
+			&.small {
+				@include u.container(desktop_s, max-width, s);
+			}
+		}
+
+		&.use-padding {
+			@include u.container(desktop_s, padding);
+
+			&.small {
+				@include u.container(desktop_s, padding, s);
+			}
+		}
+	}
+
+	@include u.mqw-from(desktop) {
+		&:not(.use-padding){
+			@include u.container(desktop);
+
+			&.small {
+				@include u.container(desktop, max-width, s);
+			}
+		}
+
+		&.use-padding {
+			@include u.container(desktop, padding);
+
+			&.small {
+				@include u.container(desktop, padding, s);
+			}
+		}
+	}
+
+	@include u.mqw-from(hr) {
+		&:not(.use-padding){
+			@include u.container(hr);
+
+			&.small {
+				@include u.container(hr, max-width, s);
+			}
+		}
+
+		&.use-padding {
+			@include u.container(hr, padding);
+
+			&.small {
+				@include u.container(hr, padding, s);
+			}
+		}
+	}
+}

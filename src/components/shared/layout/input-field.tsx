@@ -3,6 +3,7 @@
 import { useField } from "formik";
 import { useMemo } from "react";
 import styles from "./input-field.module.scss";
+import { useCombineClassNames } from "@/hooks/use-combine-classnames";
 
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
     label: string;
     required: boolean;
     type: string;
+    className?: string;
     validate?: (value: string) => string | undefined;
 };
 
@@ -17,7 +19,7 @@ type InputFieldProps = Props;
 
 export function InputField(props: InputFieldProps) {
     const { type, name, label, validate, required, ...restOfProps } = props;
-    const [field, meta, helpers] = useField({name,  validate});
+    const [field, meta, helpers] = useField({ name, validate });
 
     const labelText = useMemo(() => {
         return required ? `${label}*` : label;
@@ -33,9 +35,11 @@ export function InputField(props: InputFieldProps) {
     }
 
     const jcn = cn.join(" ");
-    
+
+    const containerCCN = useCombineClassNames(props.className);
+
     return (
-        <div className="form-control">
+        <div className={styles["form-control"]}>
             <label htmlFor={name} className={styles.label}>
                 {labelText}
             </label>

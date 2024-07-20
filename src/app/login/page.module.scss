@@ -1,0 +1,173 @@
+@use "./../../styles/utils/index" as u;
+
+.root {
+	padding-top: u.rem(40);
+	padding-bottom: u.rem(40);
+}
+.heading{
+    text-align: center;
+}
+
+.form-field{
+    margin-bottom: u.rem(30);
+}
+
+.container {
+	margin: 0 auto;
+
+	&>form>div {
+		margin-bottom: u.rem(20);
+
+		&.push {
+			margin-bottom: u.rem(70);
+		}
+	}
+
+	@include u.mqw-from(tablet_p) {
+		width: 70%;
+	}
+
+	@include u.mqw-from(tablet_l) {
+		width: 60%;
+	}
+
+	@include u.mqw-from(desktop_s) {
+		width: 45%;
+
+		&>form>div {
+			margin-bottom: u.rem(26);
+
+			&.push {
+				margin-bottom: u.rem(98);
+			}
+		}
+	}
+
+	@include u.mqw-from(desktop) {
+		&>form>div {
+			margin-bottom: u.rem(34);
+
+			&.push {
+				margin-bottom: u.rem(130);
+			}
+		}
+	}
+
+	@include u.mqw-from(hr) {
+		&>form>div {
+			margin-bottom: u.px_to_vw(34);
+
+			&.push {
+				margin-bottom: u.px_to_vw(130);
+			}
+		}
+	}
+}
+
+
+
+$padding-top: 100;
+$inner-content-heading-space: 40;
+$gap: 30;
+
+.main {
+    // background-color: u.color(neutral-light-gray);
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.container {
+    // background-color: red;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.step-label-container {
+    display: flex;
+    flex-direction: column;
+    gap: u.rem($gap);
+}
+
+.content {
+    display: flex;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+
+    &>* {
+        padding: u.rem(40);
+    }
+
+    &>.left-content {
+        background-color: u.color(yellow-color);
+        padding-top: u.rem($padding-top);
+
+        flex-basis: 30%;
+        flex-grow: 1;
+
+    }
+
+    &>.right-content {
+        padding-top: u.rem($padding-top);
+        background-color: white;
+        flex-basis: 70%;
+        flex-grow: 1;
+    }
+}
+
+.icon {
+    @include u.square(24);
+}
+
+.left-content-headings {
+    margin-bottom: u.rem($inner-content-heading-space);
+}
+
+.right-content-headings {
+    margin-bottom: u.rem($inner-content-heading-space);
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    gap: u.rem($gap);
+    margin-bottom: u.rem($gap);
+
+    &>* {
+        width: 60%;
+    }
+}
+
+.button-wrapper {
+    display: flex;
+    min-width: auto;
+    // justify-content: flex-end;
+    gap: u.rem($gap);
+}
+
+.input-group {
+    display: flex;
+    gap: u.rem($gap);
+
+    &>* {
+        flex: 1 0;
+    }
+
+    // &>:first-child {
+    //     flex-basis: 30%;
+    // }
+
+    // &>:nth-child(2) {
+    //     flex-basis: 70%;
+    //     flex: 1 0;
+    // }
+}
+
+.heading-text {
+    width: 65%;
+}
+
+.login-button{
+    width: 100%;
+}

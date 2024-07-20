@@ -1,0 +1,44 @@
+@use 'sass:math';
+
+// App container widths
+// -> Keep in sync with css-vars.ts ! <-
+$container-width-percentages: (
+	phone: .9,
+	tablet_p: .9,
+	tablet_l: .85,
+	desktop_s: .85,
+	desktop: .8,
+	hr: .8,
+);
+
+$container-width-percentages-small: (
+	phone: .9,
+	tablet_p: .8,
+	tablet_l: .65,
+	desktop_s: .56,
+	desktop: .56,
+	hr: .56,
+);
+
+@function container-perc($key, $size: default){
+	// s = small
+	@if $size == s {
+		@return map-get($container-width-percentages-small, $key);
+	} @else {
+		@return map-get($container-width-percentages, $key);
+	}
+}
+
+// Builds container css at specific breakpoint
+@mixin container($media, $function: max-width, $size: default)
+{
+	@if $function == padding {
+		$vw: math.div(1 - container-perc($media, $size), 2) * 100;
+		$value: #{$vw}vw;
+		padding-left: $value;
+		padding-right: $value;
+	} @else {
+		// Default to max-width
+		max-width: #{container-perc($media, $size) * 100}vw;
+	}
+}
