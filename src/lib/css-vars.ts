@@ -52,5 +52,20 @@ export function getCurrentBreakpointPlatform() {
 	return BreakpointPlatform.phone;
 }
 
+export function getBreakpointPixels(breakpoint: BreakpointPlatform) {
+	return breakPointsAndPixels[breakpoint];
+}
+
+
+/** Is the current breakpoint greater or equal than breakpoint platform X? */
+export function currentBreakpointGTE(bp: BreakpointPlatform) {
+	if (typeof window === "undefined") return false;
+
+	const breakPointPixels = getBreakpointPixels(bp);
+	return window.innerWidth >= breakPointPixels;
+}
+
+
+
 type AppContainerWidthPercentages = { [key in BreakpointPlatform]: number }
 

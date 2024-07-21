@@ -5,6 +5,14 @@
 
 $default-text-color: c.color(neutral-black);
 
+@mixin h1-styles() {
+	color: $default-text-color;
+	font-family: fs.ff(primary);
+	font-weight: 700;
+	font-size: fs.fs(47.78);
+	margin-bottom: f.rem(10);
+}
+
 @mixin h5-styles() {
 	color: $default-text-color;
 	font-family: fs.ff(primary);
