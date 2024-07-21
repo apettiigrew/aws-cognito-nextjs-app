@@ -1,16 +1,10 @@
 "use client";
-import { useContext, useMemo } from "react";
-import { DeviceInfoContext } from "@/components/providers/device-info-provider";
-import { BreakpointPlatform } from "@/lib/css-vars";
-import { Heading, SubHeading } from "@/components/text/subheading";
-import { AppContainer } from "@/components/shared/layout/app-container";
-import { AppSection } from "@/components/shared/layout/app-section";
-import styles from "./page.module.scss"
-import { InputField } from "@/components/shared/layout/input-field";
-import { AppButton, AppButtonVariation } from "@/components/shared/layout/buttons";
-import { Formik } from "formik";
 import { GoogleIcon } from "@/components/shared/icons/icons";
-import { RenderIf } from "@/lib/render-if";
+import { AppButton, AppButtonVariation } from "@/components/shared/layout/buttons";
+import { InputField } from "@/components/shared/layout/input-field";
+import { Heading, SubHeading } from "@/components/text/subheading";
+import { Formik } from "formik";
+import styles from "./page.module.scss";
 
 const initialValues = {
     email: "",
