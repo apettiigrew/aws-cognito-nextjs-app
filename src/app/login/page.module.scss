@@ -106,9 +106,15 @@ $gap: 30;
     }
 
     &>.left-content {
+        display: none;
         background-color: u.color(primary-marine-blue);
         padding-top: u.rem($padding-top);
         flex: 0 1 50%;
+        
+        @include u.mqw-from(tablet_l) {
+            display: block;
+            // padding-top: u.rem(150);
+        }
     }
 
     &>.right-content {

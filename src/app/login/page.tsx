@@ -18,108 +18,83 @@ const initialValues = {
 }
 
 export default function LoginPage() {
-    const deviceInfoContext = useContext(DeviceInfoContext);
-
-    const isMobile = useMemo(() => {
-        switch (deviceInfoContext.breakPoint) {
-            case BreakpointPlatform.phone:
-            case BreakpointPlatform.tabletPortrait:
-                return true;
-            case BreakpointPlatform.tabletLandscape:
-            case BreakpointPlatform.desktopSmall:
-            case BreakpointPlatform.desktop:
-            case BreakpointPlatform.highRes:
-                return false;
-            default:
-                return false;
-        }
-    }, [deviceInfoContext.breakPoint]);
-    // const isMobile = deviceInfoContext.breakPoint <= BreakpointPlatform.tabletPortrait;
-
     return (
         <>
-            <RenderIf isTrue={isMobile}>
-                <MobileLoginView />
-            </RenderIf>
-
-            <RenderIf isTrue={!isMobile}>
-                <DesktopLoginView />
-            </RenderIf>
-
+            <DesktopLoginView />
         </>
     );
 }
 
-interface MobileLoginViewProps {
+// interface MobileLoginViewProps {
 
-}
-function MobileLoginView() {
-    return (
-        <AppSection id="sign-in" className={styles.root}>
-            <AppContainer>
-                <div className={styles.container}>
-                    <SubHeading className={styles.heading}>Login</SubHeading>
-                    <div>
-                        <Formik
-                            initialValues={initialValues}
-                            onSubmit={() => { }}
-                            validateOnMount={true}
-                        >
-                            {(formik) => (
-                                <>
-                                    <InputField
-                                        // className={styles["form-field"]}
-                                        type="text"
-                                        name="email"
-                                        label="Email"
-                                        required={true}
-                                    // validate={validateFirstName}
-                                    />
-                                    <InputField
-                                        type="password"
-                                        name="password"
-                                        label="Password"
-                                        required={true}
-                                    // validate={validateFirstName}
-                                    />
-                                    <p>Forget Password</p>
-                                    <AppButton
-                                        // disabled={!sValid}
-                                        type="button"
-                                        ariaLabel="Submit button"
-                                        variation={AppButtonVariation.primaryDefault}
-                                        className={styles["login-button"]}
-                                    // onClick={() => { handleSubmit(formik) }}
-                                    >
-                                        Login
-                                    </AppButton>
+// }
+// function MobileLoginView() {
+//     return (
+//         <AppSection id="sign-in" className={styles.root}>
+//             <AppContainer>
+//                 <div className={styles.container}>
+//                     <SubHeading className={styles.heading}>Login</SubHeading>
+//                     <div>
+//                         <Formik
+//                             initialValues={initialValues}
+//                             onSubmit={() => { }}
+//                             validateOnMount={true}
+//                         >
+//                             {(formik) => (
+//                                 <>
+//                                     <InputField
+//                                         // className={styles["form-field"]}
+//                                         type="text"
+//                                         name="email"
+//                                         label="Email"
+//                                         required={true}
+//                                     // validate={validateFirstName}
+//                                     />
+//                                     <InputField
+//                                         type="password"
+//                                         name="password"
+//                                         label="Password"
+//                                         required={true}
+//                                     // validate={validateFirstName}
+//                                     />
+//                                     <p>Forget Password</p>
+//                                     <AppButton
+//                                         // disabled={!sValid}
+//                                         type="button"
+//                                         ariaLabel="Submit button"
+//                                         variation={AppButtonVariation.primaryDefault}
+//                                         className={styles["login-button"]}
+//                                     // onClick={() => { handleSubmit(formik) }}
+//                                     >
+//                                         Login
+//                                     </AppButton>
 
-                                    <div className={styles["horizontal-line"]}>
-                                        <hr className={styles.line} />
-                                        <small className={"border-text"}>or</small>
-                                        <hr className={styles.line} />
-                                    </div>
-                                    <AppButton
-                                        // disabled={!sValid}
-                                        type="button"
-                                        ariaLabel="Submit button"
-                                        variation={AppButtonVariation.primaryWhiteBorder}
-                                        className={styles["button-with-icon"]}
-                                    // onClick={() => { handleSubmit(formik) }}
-                                    >
-                                        <GoogleIcon className={styles["button-icon"]} />
-                                        Continue With Google
-                                    </AppButton>
-                                </>
-                            )}
+//                                     <div className={styles["horizontal-line"]}>
+//                                         <hr className={styles.line} />
+//                                         <small className={"border-text"}>or</small>
+//                                         <hr className={styles.line} />
+//                                     </div>
+//                                     <AppButton
+//                                         // disabled={!sValid}
+//                                         type="button"
+//                                         ariaLabel="Submit button"
+//                                         variation={AppButtonVariation.primaryWhiteBorder}
+//                                         className={styles["button-with-icon"]}
+//                                     // onClick={() => { handleSubmit(formik) }}
+//                                     >
+//                                         <GoogleIcon className={styles["button-icon"]} />
+//                                         Continue With Google
+//                                     </AppButton>
+//                                 </>
+//                             )}
 
-                        </Formik>
-                    </div>
-                </div>
-            </AppContainer>
-        </AppSection>
-    )
-}
+//                         </Formik>
+//                     </div>
+//                 </div>
+//             </AppContainer>
+//         </AppSection>
+//     )
+// }
 
 function DesktopLoginView() {
     return (
@@ -131,8 +106,7 @@ function DesktopLoginView() {
                             <Heading className={styles["left-content-heading"]} headingElement={1}>
                                 It is a shame when the soul is first to give way in this life, and the body does not give way.
                             </Heading>
-                            <p style={{ color: "white" }}>Marcus Aurelius</p>
-
+                            <SubHeading style={{ color: "white" }}>Marcus Aurelius</SubHeading>
                         </div>
                     </div>
                     <div className={styles["right-content"]}>
