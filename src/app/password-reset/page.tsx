@@ -20,6 +20,7 @@ export default function LoginPage() {
 }
 
 function DesktopLoginView() {
+    
     return (
         <main className={styles.main}>
             <div className={styles.container}>

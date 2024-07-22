@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import styles from "./page.module.scss";
 import { signUp } from "aws-amplify/auth";
 import { getErrorMessage } from "@/lib/get-error-message";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 interface FormValues {
     email: string;
@@ -36,6 +36,7 @@ export default function SignUpPage() {
 }
 
 function DesktopSignUpView() {
+    const router = useRouter();
     const onSubmitHandler = useCallback(async (values: FormValues) => {
         try {
             const { isSignUpComplete, userId, nextStep } = await signUp({
@@ -51,9 +52,11 @@ function DesktopSignUpView() {
                 },
             });
         } catch (error) {
+            console.error(error);
             return getErrorMessage(error);
         }
-        redirect("/confirm-signup");
+        // redirect("/confirm-signup");
+        router.push("/confirm-signup");
     }, []);
 
 
@@ -84,29 +87,18 @@ function DesktopSignUpView() {
                                             name="name"
                                             label="Name"
                                             required={true}
-                                        // validate={validateFirstName}
                                         />
-                                        {/* <InputField
-                                                type="text"
-                                                name="lastName"
-                                                label="Last Name"
-                                                required={true}
-                                            // validate={validateFirstName}
-                                            /> */}
-
                                         <InputField
                                             type="text"
                                             name="email"
                                             label="Email"
                                             required={true}
-                                        // validate={validateFirstName}
                                         />
                                         <InputField
                                             type="password"
                                             name="password"
                                             label="Password"
                                             required={true}
-                                        // validate={validateFirstName}
                                         />
 
                                         <p>Already have an account?</p>
@@ -114,9 +106,7 @@ function DesktopSignUpView() {
                                             type="submit"
                                             ariaLabel="Submit button"
                                             variation={AppButtonVariation.primaryDefault}
-                                            className={styles["login-button"]}
-                                        // onClick={onSubmitHandler}
-                                        >
+                                            className={styles["login-button"]}>
                                             Sign Up
                                         </AppButton>
                                     </Form>

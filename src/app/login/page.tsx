@@ -3,16 +3,28 @@ import { GoogleIcon } from "@/components/shared/icons/icons";
 import { AppButton, AppButtonVariation } from "@/components/shared/layout/buttons";
 import { InputField } from "@/components/shared/layout/input-field";
 import { Heading, SubHeading } from "@/components/text/subheading";
-import { Formik, FormikValues } from "formik";
-import styles from "./page.module.scss";
+import { getErrorMessage } from "@/lib/get-error-message";
+import { resendSignUpCode, signIn } from "aws-amplify/auth";
+import { Form, Formik } from "formik";
+import { redirect, useRouter } from "next/navigation";
 import { useCallback } from "react";
-import { signIn } from "aws-amplify/auth";
+import * as Yup from "yup";
+import styles from "./page.module.scss";
 
-const initialValues = {
+interface FormValues {
+    email: string;
+    password: string;
+}
+
+const initialValues: FormValues = {
     email: "",
     password: "",
 }
 
+const SignInSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Required'),
+    password: Yup.string().required('Required'),
+});
 export default function LoginPage() {
     return (
         <>
@@ -93,27 +105,25 @@ export default function LoginPage() {
 // }
 
 function DesktopLoginView() {
-
-    const onSubmitHandler = useCallback(async (values: FormikValues) => {
+    const router = useRouter();
+    const onSubmitHandler = useCallback(async (values: FormValues) => {
         let redirectLink = "/dashboard";
-        console.log(values);
         try {
-            // const { isSignedIn, nextStep } = await signIn({
-               
-            //     username: String(formData.get("email")),
-            //     password: String(formData.get("password")),
-            // });
-            // if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
-            //     await resendSignUpCode({
-            //         username: String(formData.get("email")),
-            //     });
-            //     redirectLink = "/auth/confirm-signup";
-            // }
+            const { isSignedIn, nextStep } = await signIn({
+                username: String(values.email),
+                password: String(values.password),
+            });
+            if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
+                await resendSignUpCode({
+                    username: String(values.email),
+                });
+                redirectLink = "/confirm-signup";
+            }
         } catch (error) {
-            // return getErrorMessage(error);
+            return getErrorMessage(error);
         }
 
-        // redirect(redirectLink);
+        router.push(redirectLink);
     }, []);
 
     return (
@@ -136,55 +146,48 @@ function DesktopLoginView() {
                                     initialValues={initialValues}
                                     onSubmit={onSubmitHandler}
                                     validateOnMount={true}
+                                    validationSchema={SignInSchema}
                                 >
-                                    {(formik) => (
-                                        <>
-                                            <InputField
-                                                // className={styles["form-field"]}
-                                                type="text"
-                                                name="email"
-                                                label="Email"
-                                                required={true}
-                                            // validate={validateFirstName}
-                                            />
-                                            <InputField
-                                                type="password"
-                                                name="password"
-                                                label="Password"
-                                                required={true}
-                                            // validate={validateFirstName}
-                                            />
-                                            <p>Forget Password</p>
-                                            <AppButton
-                                                // disabled={!sValid}
-                                                type="button"
-                                                ariaLabel="Submit button"
-                                                variation={AppButtonVariation.primaryDefault}
-                                                className={styles["login-button"]}
-                                            // onClick={() => { handleSubmit(formik) }}
-                                            >
-                                                Login
-                                            </AppButton>
+                                    <Form>
+                                        <InputField
+                                            type="text"
+                                            name="email"
+                                            label="Email"
+                                            required={true}
+                                        />
+                                        <InputField
+                                            type="password"
+                                            name="password"
+                                            label="Password"
+                                            required={true}
+                                        />
+                                        <p>Forget Password</p>
+                                        <AppButton
+                                            type="submit"
+                                            ariaLabel="Submit button"
+                                            variation={AppButtonVariation.primaryDefault}
+                                            className={styles["login-button"]}
+                                        >
+                                            Login
+                                        </AppButton>
 
-                                            <div className={styles["horizontal-line"]}>
-                                                <hr className={styles.line} />
-                                                <small className={"border-text"}>or</small>
-                                                <hr className={styles.line} />
-                                            </div>
-                                            <AppButton
-                                                // disabled={!sValid}
-                                                type="button"
-                                                ariaLabel="Submit button"
-                                                variation={AppButtonVariation.primaryWhiteBorder}
-                                                className={styles["button-with-icon"]}
-                                            // onClick={() => { handleSubmit(formik) }}
-                                            >
-                                                <GoogleIcon className={styles["button-icon"]} />
-                                                Continue With Google
-                                            </AppButton>
-                                        </>
-                                    )}
-
+                                        <div className={styles["horizontal-line"]}>
+                                            <hr className={styles.line} />
+                                            <small className={"border-text"}>or</small>
+                                            <hr className={styles.line} />
+                                        </div>
+                                        <AppButton
+                                            // disabled={!sValid}
+                                            type="button"
+                                            ariaLabel="Submit button"
+                                            variation={AppButtonVariation.primaryWhiteBorder}
+                                            className={styles["button-with-icon"]}
+                                        // onClick={() => { handleSubmit(formik) }}
+                                        >
+                                            <GoogleIcon className={styles["button-icon"]} />
+                                            Continue With Google
+                                        </AppButton>
+                                    </Form>
                                 </Formik>
                             </div>
                         </div>

@@ -7,14 +7,20 @@ import { Form, Formik } from "formik";
 import styles from "./page.module.scss";
 import { useCallback } from "react";
 import * as Yup from "yup";
+import { autoSignIn, confirmSignUp } from "aws-amplify/auth";
+import { getErrorMessage } from "@/lib/get-error-message";
+import { redirect, useRouter } from "next/navigation";
 
 interface FormValues {
+    email: string;
     code: string;
 }
 const initialValues: FormValues = {
+    email: "",
     code: "",
 }
 const ConfirmCodeSchema = Yup.object().shape({
+    email: Yup.string().email('Invalid email').required('Required'),
     code: Yup.string().required('Required'),
 });
 
@@ -27,9 +33,18 @@ export default function ConfirmSignUpPage() {
 }
 
 function ConfirmSignUpView() {
-
+    const router = useRouter();
     const onSubmitHandler = useCallback(async (values: FormValues) => {
-
+        try {
+            const { isSignUpComplete, nextStep } = await confirmSignUp({
+              username: String(values.email),
+              confirmationCode: String(values.code),
+            });
+            await autoSignIn();
+          } catch (error) {
+            return getErrorMessage(error);
+          }
+          router.push("/login");
     }, []);
 
     return (
@@ -54,6 +69,12 @@ function ConfirmSignUpView() {
                                     validateOnMount={true}
                                     validationSchema={ConfirmCodeSchema}>
                                     <Form>
+                                        <InputField
+                                            type="text"
+                                            name="email"
+                                            label="Email"
+                                            required={true}
+                                        />
                                         <InputField
                                             type="text"
                                             name="code"
