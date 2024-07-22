@@ -3,8 +3,10 @@ import { GoogleIcon } from "@/components/shared/icons/icons";
 import { AppButton, AppButtonVariation } from "@/components/shared/layout/buttons";
 import { InputField } from "@/components/shared/layout/input-field";
 import { Heading, SubHeading } from "@/components/text/subheading";
-import { Formik } from "formik";
+import { Formik, FormikValues } from "formik";
 import styles from "./page.module.scss";
+import { useCallback } from "react";
+import { signIn } from "aws-amplify/auth";
 
 const initialValues = {
     email: "",
@@ -91,6 +93,29 @@ export default function LoginPage() {
 // }
 
 function DesktopLoginView() {
+
+    const onSubmitHandler = useCallback(async (values: FormikValues) => {
+        let redirectLink = "/dashboard";
+        console.log(values);
+        try {
+            // const { isSignedIn, nextStep } = await signIn({
+               
+            //     username: String(formData.get("email")),
+            //     password: String(formData.get("password")),
+            // });
+            // if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
+            //     await resendSignUpCode({
+            //         username: String(formData.get("email")),
+            //     });
+            //     redirectLink = "/auth/confirm-signup";
+            // }
+        } catch (error) {
+            // return getErrorMessage(error);
+        }
+
+        // redirect(redirectLink);
+    }, []);
+
     return (
         <main className={styles.main}>
             <div className={styles.container}>
@@ -109,7 +134,7 @@ function DesktopLoginView() {
                             <div>
                                 <Formik
                                     initialValues={initialValues}
-                                    onSubmit={() => { }}
+                                    onSubmit={onSubmitHandler}
                                     validateOnMount={true}
                                 >
                                     {(formik) => (
