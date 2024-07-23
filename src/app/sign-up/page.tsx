@@ -2,27 +2,34 @@
 import { AppButton, AppButtonVariation } from "@/components/shared/layout/buttons";
 import { InputField } from "@/components/shared/layout/input-field";
 import { Heading, SubHeading } from "@/components/text/subheading";
+import { getErrorMessage } from "@/lib/get-error-message";
+import { signUp } from "aws-amplify/auth";
 import { Form, Formik } from "formik";
+import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import * as Yup from 'yup';
 import styles from "./page.module.scss";
-import { signUp } from "aws-amplify/auth";
-import { getErrorMessage } from "@/lib/get-error-message";
-import { redirect, useRouter } from "next/navigation";
+import { propertiesOf } from "@/lib/utils/constants";
+import Link from "next/link";
+
+const propof = propertiesOf<FormValues>();
 
 interface FormValues {
+    firstName: string;
+    lastName: string;
     email: string;
     password: string;
-    name: string;
 }
 const initialValues: FormValues = {
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
 }
 const SignupSchema = Yup.object().shape({
-    name: Yup.string().required('Required'),
-    email: Yup.string().email('Invalid email').required('Required'),
+    firstName: Yup.string().required("Please enter your first name").min(2, "Must be at least 2 characters").max(20, 'Must be 20 characters or less'),
+    lastName: Yup.string().required("Please enter your last name").min(2, "Must be at least 2 characters").max(20, 'Must be 20 characters or less'),
+    email: Yup.string().email().required("Please enter your email"),
     password: Yup.string().required('Required'),
 });
 
@@ -45,7 +52,9 @@ function DesktopSignUpView() {
                 options: {
                     userAttributes: {
                         email: String(values.email),
-                        name: String(values.name),
+                        name: String(values.firstName) + " " + String(values.lastName),
+                        given_name: String(values.firstName),
+                        family_name: String(values.lastName),
                     },
                     // optional
                     autoSignIn: true,
@@ -67,14 +76,14 @@ function DesktopSignUpView() {
                     <div className={styles["left-content"]}>
                         <div className={styles["glass-container"]}>
                             <Heading className={styles["left-content-heading"]} headingElement={1}>
-                                Let's Go, Happy to have you onboard
+                                Let's Go, Happy to have you onboard 😁
                             </Heading>
                             {/* <SubHeading style={{ color: "white" }}>Marcus Aurelius</SubHeading> */}
                         </div>
                     </div>
                     <div className={styles["right-content"]}>
                         <div className={styles.container}>
-                            <SubHeading className={styles["desktop-heading"]}>Hey, Hello 👋</SubHeading>
+                            <SubHeading className={styles["desktop-heading"]}>Welcome, sign up to create an account 🚀</SubHeading>
                             <div>
                                 <Formik
                                     initialValues={initialValues}
@@ -82,26 +91,37 @@ function DesktopSignUpView() {
                                     validateOnMount={true}
                                     validationSchema={SignupSchema}>
                                     <Form>
+
+                                        <div className={styles["input-group"]}>
+                                            <InputField
+                                                type="text"
+                                                name={propof("firstName")}
+                                                label="First Name"
+                                                required={true}
+                                            />
+                                            <InputField
+                                                type="text"
+                                                name={propof("lastName")}
+                                                label="Last Name"
+                                                required={true}
+                                            />
+                                        </div>
                                         <InputField
                                             type="text"
-                                            name="name"
-                                            label="Name"
-                                            required={true}
-                                        />
-                                        <InputField
-                                            type="text"
-                                            name="email"
+                                            name={propof("email")}
                                             label="Email"
                                             required={true}
                                         />
                                         <InputField
                                             type="password"
-                                            name="password"
+                                            name={propof("password")}
                                             label="Password"
                                             required={true}
                                         />
 
-                                        <p>Already have an account?</p>
+                                        <Link className={styles.link} href="/login">
+                                            <p>Already have an account?</p>
+                                        </Link>
                                         <AppButton
                                             type="submit"
                                             ariaLabel="Submit button"

@@ -1,5 +1,6 @@
 // Import the css reset and fonts first!
 @import './../../node_modules/reset-css/sass/reset';
-@import './fonts/ubuntu/index';
+
 @import './global/defaults.scss';
+@import './fonts/ubuntu/index';
 @import "./global/app-button.scss";

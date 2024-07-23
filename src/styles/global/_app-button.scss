@@ -67,12 +67,15 @@ button:disabled {
 	border: u.rem(2) solid u.color(neutral-black);
 }
 
-// .app-button-primary-default:hover{
-// 	background: u.color(neutral-white);
-// 	color: u.color(neutral-black);
-// 	border: u.rem(2) solid u.color(neutral-black);
-// 	transition: all 0.3s;
-// }
+.app-button-primary-default:hover {
+	background: rgb(2, 0, 36);
+	background: -moz-linear-gradient(93deg, rgba(2, 0, 36, 1) 0%, rgba(25, 66, 184, 1) 100%);
+	background: -webkit-linear-gradient(93deg, rgba(2, 0, 36, 1) 0%, rgba(25, 66, 184, 1) 100%);
+	background: linear-gradient(93deg, rgba(2, 0, 36, 1) 0%, rgba(25, 66, 184, 1) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020024", endColorstr="#1942b8", GradientType=1);
+	color: u.color(neutral-white);
+	transition: all 0.1s;
+}
 
 .app-button-white-default {
 	background: u.color(neutral-white);

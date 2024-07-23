@@ -1,5 +1,22 @@
 @use "./../../styles/utils/index" as u;
 
+$gap: 30;
+
+.input-group {
+    flex-direction: column;
+    display: flex;
+    gap: 0;
+
+    @include u.mqw-from(tablet_l) {
+        flex-direction: row;
+        gap: u.rem($gap);
+
+        &>* {
+            flex: 1 0;
+        }
+    }
+}
+
 .root {
     padding-top: u.rem(40);
     padding-bottom: u.rem(40);
@@ -107,13 +124,19 @@ $gap: 30;
 
     &>.left-content {
         display: none;
-        background-color: u.color(primary-marine-blue);
+        // background-color: u.color(primary-marine-blue);
+        background: rgb(2, 0, 36);
+        background: -moz-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(0, 77, 153, 1) 100%);
+        background: -webkit-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(0, 77, 153, 1) 100%);
+        background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(0, 77, 153, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020024", endColorstr="#004d99", GradientType=1);
+
         padding-top: u.rem($padding-top);
         flex: 0 1 50%;
-        
+
         @include u.mqw-from(tablet_l) {
             display: block;
-            
+
             // padding-top: u.rem(150);
         }
     }
@@ -153,24 +176,6 @@ $gap: 30;
     min-width: auto;
     // justify-content: flex-end;
     gap: u.rem($gap);
-}
-
-.input-group {
-    display: flex;
-    gap: u.rem($gap);
-
-    &>* {
-        flex: 1 0;
-    }
-
-    // &>:first-child {
-    //     flex-basis: 30%;
-    // }
-
-    // &>:nth-child(2) {
-    //     flex-basis: 70%;
-    //     flex: 1 0;
-    // }
 }
 
 .heading-text {
@@ -234,5 +239,13 @@ $gap: 30;
 
     @include u.mqw-from(hr) {
         @include u.square(32, vw);
+    }
+}
+
+.link {
+    text-decoration: none;
+
+    &>* {
+        margin-bottom: u.rem($gap) !important;
     }
 }

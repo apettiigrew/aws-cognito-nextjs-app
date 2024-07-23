@@ -11,10 +11,10 @@ export const authConfig: ResourcesConfig["Auth"] = {
         domain: String(process.env.NEXT_PUBLIC_OAUTH_DOMAIN),
         scopes: ["email", "openid", "profile", "phone"],
         redirectSignIn: [
-          "http://localhost:3000",
+          "http://localhost:3000/dashboard",
         ],
         redirectSignOut: [
-          "http://localhost:3000",
+          "http://localhost:3000/login",
         ],
         responseType: "code",
       }
