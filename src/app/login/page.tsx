@@ -4,7 +4,7 @@ import { AppButton, AppButtonVariation } from "@/components/shared/layout/button
 import { InputField } from "@/components/shared/layout/input-field";
 import { Heading, SubHeading } from "@/components/text/subheading";
 import { getErrorMessage } from "@/lib/get-error-message";
-import { resendSignUpCode, signIn } from "aws-amplify/auth";
+import { resendSignUpCode, signIn, signInWithRedirect } from "aws-amplify/auth";
 import { Form, Formik } from "formik";
 import { redirect, useRouter } from "next/navigation";
 import { useCallback } from "react";
@@ -126,6 +126,14 @@ function DesktopLoginView() {
         router.push(redirectLink);
     }, []);
 
+    const federatedSignInHandler = useCallback(async () => {
+        try {
+            signInWithRedirect({ provider: "Google"});
+            redirect("/dashboard");
+        } catch (error) {
+            return getErrorMessage(error);
+        }
+    }, []);
     return (
         <main className={styles.main}>
             <div className={styles.container}>
@@ -182,7 +190,7 @@ function DesktopLoginView() {
                                             ariaLabel="Submit button"
                                             variation={AppButtonVariation.primaryWhiteBorder}
                                             className={styles["button-with-icon"]}
-                                        // onClick={() => { handleSubmit(formik) }}
+                                            onClick={federatedSignInHandler}
                                         >
                                             <GoogleIcon className={styles["button-icon"]} />
                                             Continue With Google
