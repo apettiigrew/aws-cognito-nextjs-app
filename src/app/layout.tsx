@@ -9,8 +9,8 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   creator: 'Andrew Pettigrew',
   authors: [{ name: 'Andrew Pettigrew', url: 'https://www.linkedin.com/in/andrewpettigrew/' }],
-  title: "Multi Step Form",
-  description: "A multi-step form that allows users to enter their personal details, shipping address, payment details, and review their order before submitting.",
+  title: "Login Page",
+  description: "An nextjs app that uses AWS Cognito for authentication",
 };
 
 export default function RootLayout({
