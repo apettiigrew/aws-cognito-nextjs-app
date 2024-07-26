@@ -53,3 +53,5 @@ export class AWSCognitoError<T = string> extends Error {
 
 /** https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_InitiateAuth.html#API_InitiateAuth_Errors */
 export type AWSInitiateAuthError = AWSCognitoError<AWSCognitoInitiateAuthErrorCodes | AWSCognitoCommonErrorCodes>;
+export type AWSInitiateAuthError = AWSCognitoError<AWSCognitoInitiateAuthErrorCodes | AWSCognitoCommonErrorCodes>;
+export type AWSCognitoCommonError = AWSCognitoInitiateAuthErrorCodes | AWSCognitoCommonErrorCodes;

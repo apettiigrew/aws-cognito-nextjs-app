@@ -1,18 +1,20 @@
 "use client";
 
-import { AWSInitiateAuthError } from "@/lib/auth/cognito-api";
+import { AWSCognitoCommonError, AWSCognitoError, AWSInitiateAuthError } from "@/lib/auth/cognito-api";
 import { getErrorMessage } from "@/lib/get-error-message";
 import { resendSignUpCode, signIn, signInWithRedirect } from "aws-amplify/auth";
-import { Form, Formik } from "formik";
+import { Form, Formik, FormikValues } from "formik";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import * as Yup from "yup";
-import { GoogleIcon } from "../shared/icons/icons";
+import { GoogleIcon, WarningIcon } from "../shared/icons/icons";
 import { AppButton, AppButtonVariation } from "../shared/layout/buttons";
 import { InputField } from "../shared/layout/input-field";
 import { Heading, SubHeading } from "../text/subheading";
 import styles from "./login-view.module.scss";
+import { RenderIf } from "@/lib/render-if";
 
+type SigninErrorTypes = AWSCognitoCommonError | "Unknown" | null ;
 interface FormValues {
     email: string;
     password: string;
@@ -29,13 +31,14 @@ const SignInSchema = Yup.object().shape({
 });
 
 export function DesktopLoginView() {
-
-    const [errorCode, setErrorCode] = useState<string | null>(null);
+    const [formstate, setFormState] = useState("initial");
+    const [errorCode, setErrorCode] = useState<SigninErrorTypes>(null);
     const router = useRouter();
 
     const onSubmitHandler = useCallback(async (values: FormValues) => {
-        let redirectLink = "/dashboard";
         try {
+            setErrorCode(null);
+            let redirectLink = "/dashboard";
             const { isSignedIn, nextStep } = await signIn({
                 username: String(values.email),
                 password: String(values.password),
@@ -46,27 +49,21 @@ export function DesktopLoginView() {
                 });
                 redirectLink = "/confirm-signup";
             }
-        } catch (error: unknown) {
-            // error.name = "AWSCognitoError";
-            const e = error as AWSInitiateAuthError;
 
+            router.push(redirectLink);
+        } catch (error: unknown) {
+            const e = error as AWSInitiateAuthError;
             switch (e.name) {
                 case "NotAuthorizedException":
                     setErrorCode("NotAuthorizedException");
                     break;
                 default: {
-                    setErrorcode("UnknownError");
+                    setErrorCode("Unknown");
                 }
             }
 
-
-
-            console.log(e.name);
-            console.log(e.code);
-            return getErrorMessage(error);
+            // return getErrorMessage(error);
         }
-
-        router.push(redirectLink);
     }, []);
 
     const federatedSignInHandler = useCallback(async () => {
@@ -77,7 +74,7 @@ export function DesktopLoginView() {
             return getErrorMessage(error);
         }
     }, []);
-    
+
     return (
         <main className={styles.main}>
             <div className={styles.container}>
@@ -91,61 +88,96 @@ export function DesktopLoginView() {
                         </div>
                     </div>
                     <div className={styles["right-content"]}>
-                        <div className={styles.container}>
-                            <SubHeading className={styles["desktop-heading"]}>Hey, Hello 👋</SubHeading>
-                            <div>
-                                <Formik
-                                    initialValues={initialValues}
-                                    onSubmit={onSubmitHandler}
-                                    validateOnMount={true}
-                                    validationSchema={SignInSchema}
-                                >
-                                    <Form>
-                                        <InputField
-                                            type="text"
-                                            name="email"
-                                            label="Email"
-                                            required={true}
-                                        />
-                                        <InputField
-                                            type="password"
-                                            name="password"
-                                            label="Password"
-                                            required={true}
-                                        />
-                                        <p>Forget Password</p>
-                                        <AppButton
-                                            type="submit"
-                                            ariaLabel="Submit button"
-                                            variation={AppButtonVariation.primaryDefault}
-                                            className={styles["login-button"]}
-                                        >
-                                            Login
-                                        </AppButton>
+                        <Formik
+                            initialValues={initialValues}
+                            onSubmit={onSubmitHandler}
+                            validateOnMount={true}
+                            validationSchema={SignInSchema}>
+                            {
 
-                                        <div className={styles["horizontal-line"]}>
-                                            <hr className={styles.line} />
-                                            <small className={"border-text"}>or</small>
-                                            <hr className={styles.line} />
+                                (formik: FormikValues) => (
+                                    <div className={styles.container}>
+                                        <ErrorMessageBanner errorCode={errorCode} />
+                                        <SubHeading className={styles["desktop-heading"]}>Hey, Hello 👋</SubHeading>
+                                        <div>
+                                            <Form>
+                                                <InputField
+                                                    type="text"
+                                                    name="email"
+                                                    label="Email"
+                                                    required={true}
+                                                />
+                                                <InputField
+                                                    type="password"
+                                                    name="password"
+                                                    label="Password"
+                                                    required={true}
+                                                />
+                                                <p>Forget Password</p>
+                                                <AppButton
+                                                    type="submit"
+                                                    ariaLabel="Submit button"
+                                                    variation={AppButtonVariation.primaryDefault}
+                                                    className={styles["login-button"]}
+                                                    disabled={formik.isSubmitting}
+                                                >
+                                                    Login
+                                                </AppButton>
+
+                                                <div className={styles["horizontal-line"]}>
+                                                    <hr className={styles.line} />
+                                                    <small className={"border-text"}>or</small>
+                                                    <hr className={styles.line} />
+                                                </div>
+                                                <AppButton
+                                                    // disabled={!sValid}
+                                                    type="button"
+                                                    ariaLabel="Submit button"
+                                                    variation={AppButtonVariation.primaryWhiteBorder}
+                                                    className={styles["button-with-icon"]}
+                                                    onClick={federatedSignInHandler}
+                                                >
+                                                    <GoogleIcon className={styles["button-icon"]} />
+                                                    Continue With Google
+                                                </AppButton>
+                                            </Form>
+
                                         </div>
-                                        <AppButton
-                                            // disabled={!sValid}
-                                            type="button"
-                                            ariaLabel="Submit button"
-                                            variation={AppButtonVariation.primaryWhiteBorder}
-                                            className={styles["button-with-icon"]}
-                                            onClick={federatedSignInHandler}
-                                        >
-                                            <GoogleIcon className={styles["button-icon"]} />
-                                            Continue With Google
-                                        </AppButton>
-                                    </Form>
-                                </Formik>
-                            </div>
-                        </div>
+                                    </div>
+                                )
+                            }
+                        </Formik>
                     </div>
                 </div>
             </div>
         </main>
+    )
+}
+
+
+interface ErrorMessageBannerProps {
+    errorCode: SigninErrorTypes;
+}
+function ErrorMessageBanner(props: ErrorMessageBannerProps) {
+    const { errorCode } = props;
+    let message = "";
+    console.log(errorCode);
+    if (errorCode === null || errorCode === undefined) {
+        return null;
+    }
+
+    switch (errorCode) {
+        case "NotAuthorizedException":
+            message = "Incorrect credentials, please try again"
+            break;
+        case "Unknown":
+            message = "Something went wrong please try again later"
+    }
+
+    return (
+        <div className={styles["error-banner"]}>
+            <WarningIcon />
+            <p>{message}</p>
+        </div>
     )
 }

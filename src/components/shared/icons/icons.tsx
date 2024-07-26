@@ -3,6 +3,25 @@ import { SVGProps } from "react";
 
 const xlmns = "http://www.w3.org/2000/svg";
 
+export function WarningIcon(props: SVGProps<SVGSVGElement>) {
+    const { className, ...remainingProps } = props;
+    const cn = useCombineClassNames(props.className);
+
+    return (
+        <svg
+            className={cn}
+            xmlns={xlmns}
+            width={24}
+            height={24}
+            fill="#5f6368"
+            viewBox="0 -960 960 960"
+            {...props}
+        >
+            <path d="m40-120 440-760 440 760H40Zm138-80h604L480-720 178-200Zm302-40q17 0 28.5-11.5T520-280q0-17-11.5-28.5T480-320q-17 0-28.5 11.5T440-280q0 17 11.5 28.5T480-240Zm-40-120h80v-200h-80v200Zm40-100Z" />
+        </svg>
+    )
+}
+
 export function GoogleIcon(props: SVGProps<SVGSVGElement>) {
     const { className, ...remainingProps } = props;
     const cn = useCombineClassNames(props.className);
