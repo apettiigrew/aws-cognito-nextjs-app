@@ -2,7 +2,7 @@
 
 import { AWSCognitoCommonError, AWSCognitoError, AWSInitiateAuthError } from "@/lib/auth/cognito-api";
 import { getErrorMessage } from "@/lib/get-error-message";
-import { resendSignUpCode, signIn, signInWithRedirect } from "aws-amplify/auth";
+import { confirmResetPassword, resendSignUpCode, signIn, signInWithRedirect } from "aws-amplify/auth";
 import { Form, Formik, FormikValues } from "formik";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
@@ -11,67 +11,45 @@ import { GoogleIcon, WarningIcon } from "../../../shared/icons/icons";
 import { AppButton, AppButtonVariation } from "../../../shared/layout/buttons";
 import { InputField } from "../../../shared/layout/input-field";
 import { Heading, SubHeading } from "../../../text/subheading";
-import styles from "./forgot-password.module.scss";
+import styles from "./forgot-password-confirm.module.scss";
 import Link from "next/link";
 
 type SigninErrorTypes = AWSCognitoCommonError | "Unknown" | null;
 interface FormValues {
     email: string;
     password: string;
+    // confirmNewPassword: string;
+    code: string;
 }
 
 const initialValues: FormValues = {
     email: "",
     password: "",
+    code: "",
 }
 
 const SignInSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Please enter your email'),
     password: Yup.string().required('Required'),
+    code: Yup.string().matches(/^[0-9]/, "Invalid Code").required('Required'),
 });
 
 export function ForgotPasswordConfirmView() {
-    const [formstate, setFormState] = useState("initial");
     const [errorCode, setErrorCode] = useState<SigninErrorTypes>(null);
     const router = useRouter();
 
     const onSubmitHandler = useCallback(async (values: FormValues) => {
         try {
-            setErrorCode(null);
-            let redirectLink = "/dashboard";
-            const { isSignedIn, nextStep } = await signIn({
-                username: String(values.email),
-                password: String(values.password),
+            const link = "/login";
+            await confirmResetPassword({
+                username: String(values["email"]),
+                confirmationCode: String(values["code"]),
+                newPassword: String(values["password"]),
             });
-            if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
-                await resendSignUpCode({
-                    username: String(values.email),
-                });
-                redirectLink = "/confirm-signup";
-            }
-
-            router.push(redirectLink);
+            router.push(link);
         } catch (error: unknown) {
-            const e = error as AWSInitiateAuthError;
-            switch (e.name) {
-                case "NotAuthorizedException":
-                    setErrorCode("NotAuthorizedException");
-                    break;
-                default: {
-                    setErrorCode("Unknown");
-                }
-            }
-
-            // return getErrorMessage(error);
-        }
-    }, []);
-
-    const federatedSignInHandler = useCallback(async () => {
-        try {
-            signInWithRedirect({ provider: "Google" });
-            // redirect("/dashboard");
-        } catch (error) {
-            return getErrorMessage(error);
+            // const e = error as AWSInitiateAuthError;
+            console.log(error);
         }
     }, []);
 
@@ -82,9 +60,9 @@ export function ForgotPasswordConfirmView() {
                     <div className={styles["left-content"]}>
                         <div className={styles["glass-container"]}>
                             <Heading className={styles["left-content-heading"]} headingElement={1}>
-                                It is a shame when the soul is first to give way in this life, and the body does not give way.
+                                Hang tight, you're almost there
                             </Heading>
-                            <SubHeading style={{ color: "white" }}>Marcus Aurelius</SubHeading>
+                            {/* <SubHeading style={{ color: "white" }}>Marcus Aurelius</SubHeading> */}
                         </div>
                     </div>
                     <div className={styles["right-content"]}>
@@ -99,7 +77,7 @@ export function ForgotPasswordConfirmView() {
                                     (formik: FormikValues) => (
                                         <>
                                             <ErrorMessageBanner errorCode={errorCode} />
-                                            <SubHeading className={styles["desktop-heading"]}>Hey, Hello 👋</SubHeading>
+                                            <SubHeading className={styles["desktop-heading"]}>Enter password reset details</SubHeading>
                                             <div>
                                                 <Form>
                                                     <InputField
@@ -111,35 +89,22 @@ export function ForgotPasswordConfirmView() {
                                                     <InputField
                                                         type="password"
                                                         name="password"
-                                                        label="Password"
+                                                        label="New Password"
                                                         required={true}
                                                     />
-                                                    <p>Forget Password</p>
+                                                    <InputField
+                                                        type="text"
+                                                        name="code"
+                                                        label="Confirmation Code"
+                                                        required={true}
+                                                    />
                                                     <AppButton
                                                         type="submit"
                                                         ariaLabel="Submit button"
                                                         variation={AppButtonVariation.primaryDefault}
                                                         className={styles["login-button"]}
-                                                        disabled={formik.isSubmitting}
-                                                    >
-                                                        Login
-                                                    </AppButton>
-
-                                                    <div className={styles["horizontal-line"]}>
-                                                        <hr className={styles.line} />
-                                                        <small className={"border-text"}>or</small>
-                                                        <hr className={styles.line} />
-                                                    </div>
-                                                    <AppButton
-                                                        // disabled={!sValid}
-                                                        type="button"
-                                                        ariaLabel="Submit button"
-                                                        variation={AppButtonVariation.primaryWhiteBorder}
-                                                        className={styles["button-with-icon"]}
-                                                        onClick={federatedSignInHandler}
-                                                    >
-                                                        <GoogleIcon className={styles["button-icon"]} />
-                                                        Continue With Google
+                                                        disabled={formik.isSubmitting}>
+                                                        Save
                                                     </AppButton>
                                                 </Form>
                                             </div>
@@ -147,9 +112,6 @@ export function ForgotPasswordConfirmView() {
                                     )
                                 }
                             </Formik>
-                            <Link className={styles["create-account-link"]} href={"/sign-up"}>
-                                <p>Create an account</p>
-                            </Link>
                         </div>
                     </div>
                 </div>

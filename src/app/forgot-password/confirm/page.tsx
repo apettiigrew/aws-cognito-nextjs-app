@@ -1,5 +1,5 @@
-import { ForgotPasswordSubmitView } from "@/components/pages/forgot-password/submit/forgot-password";
+import { ForgotPasswordConfirmView } from "@/components/pages/forgot-password/confirm/forgot-password-confirm";
 
 export default function ForgotPasswordConfirmPage() {
-    return (<ForgotPasswordSubmitView />);
+    return (<ForgotPasswordConfirmView />);
 }

@@ -53,6 +53,7 @@ export function LoginView() {
             router.push(redirectLink);
         } catch (error: unknown) {
             const e = error as AWSInitiateAuthError;
+            console.log(e);
             switch (e.name) {
                 case "NotAuthorizedException":
                     setErrorCode("NotAuthorizedException");
