@@ -1,5 +1,5 @@
 
-import { DesktopLoginView } from "@/components/views/login-view";
+import { LoginView } from "@/components/views//login/login-view";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function LoginPage() {
     return (
         <>
-            <DesktopLoginView />
+            <LoginView />
         </>
     );
 }
