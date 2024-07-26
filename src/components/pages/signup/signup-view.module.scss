@@ -1,0 +1,251 @@
+@use "./../../../styles/utils/index" as u;
+
+$gap: 30;
+
+.input-group {
+    flex-direction: column;
+    display: flex;
+    gap: 0;
+
+    @include u.mqw-from(tablet_l) {
+        flex-direction: row;
+        gap: u.rem($gap);
+
+        &>* {
+            flex: 1 0;
+        }
+    }
+}
+
+.root {
+    padding-top: u.rem(40);
+    padding-bottom: u.rem(40);
+}
+
+.heading {
+    text-align: center;
+}
+
+.form-field {
+    margin-bottom: u.rem(30);
+}
+
+.left-content-heading {
+    color: u.color(neutral-white);
+    line-height: 1.5;
+}
+
+.container {
+    margin: 0 auto;
+
+    &>form>div {
+        margin-bottom: u.rem(20);
+
+        &.push {
+            margin-bottom: u.rem(70);
+        }
+    }
+
+    @include u.mqw-from(tablet_p) {
+        width: 70%;
+    }
+
+    @include u.mqw-from(tablet_l) {
+        width: 60%;
+    }
+
+    @include u.mqw-from(desktop_s) {
+        width: 45%;
+
+        &>form>div {
+            margin-bottom: u.rem(26);
+
+            &.push {
+                margin-bottom: u.rem(98);
+            }
+        }
+    }
+
+    @include u.mqw-from(desktop) {
+        &>form>div {
+            margin-bottom: u.rem(34);
+
+            &.push {
+                margin-bottom: u.rem(130);
+            }
+        }
+    }
+
+    @include u.mqw-from(hr) {
+        &>form>div {
+            margin-bottom: u.px_to_vw(34);
+
+            &.push {
+                margin-bottom: u.px_to_vw(130);
+            }
+        }
+    }
+}
+
+
+
+$padding-top: 100;
+$inner-content-heading-space: 40;
+$gap: 30;
+
+.main {
+    // background-color: u.color(neutral-light-gray);
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.container {
+    // background-color: red;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.step-label-container {
+    display: flex;
+    flex-direction: column;
+    gap: u.rem($gap);
+}
+
+.content {
+    display: flex;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+
+    &>* {
+        padding: u.rem(40);
+    }
+
+    &>.left-content {
+        display: none;
+        // background-color: u.color(primary-marine-blue);
+        background: rgb(2, 0, 36);
+        background: -moz-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(0, 77, 153, 1) 100%);
+        background: -webkit-linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(0, 77, 153, 1) 100%);
+        background: linear-gradient(180deg, rgba(2, 0, 36, 1) 0%, rgba(0, 77, 153, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#020024", endColorstr="#004d99", GradientType=1);
+
+        padding-top: u.rem($padding-top);
+        flex: 0 1 50%;
+
+        @include u.mqw-from(tablet_l) {
+            display: block;
+
+            // padding-top: u.rem(150);
+        }
+    }
+
+    &>.right-content {
+        padding-top: u.rem($padding-top);
+        background-color: white;
+        flex: 1 0 50%;
+    }
+}
+
+.icon {
+    @include u.square(24);
+}
+
+.left-content-headings {
+    margin-bottom: u.rem($inner-content-heading-space);
+}
+
+.right-content-headings {
+    margin-bottom: u.rem($inner-content-heading-space);
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    gap: u.rem($gap);
+    margin-bottom: u.rem($gap);
+
+    &>* {
+        width: 60%;
+    }
+}
+
+.button-wrapper {
+    display: flex;
+    min-width: auto;
+    // justify-content: flex-end;
+    gap: u.rem($gap);
+}
+
+.heading-text {
+    width: 65%;
+}
+
+.login-button {
+    width: 100%;
+    margin-bottom: u.rem(30);
+}
+
+.desktop-heading {
+    text-align: left;
+    margin-bottom: u.rem(30);
+}
+
+.horizontal-line {
+    display: flex;
+    justify-content: baseline;
+    align-items: center;
+    margin-bottom: u.rem(30);
+
+    &>.line {
+        flex: 1 0 auto;
+    }
+}
+
+.border-text {
+    flex: 0 0 auto;
+}
+
+.button-with-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: u.rem(20);
+    width: 100%;
+
+    &>:nth-child(2) {
+        flex-grow: 1;
+        color: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        font-family: inherit;
+        font-weight: inherit;
+    }
+
+    // @include u.mqw-from(tablet_l) {
+    //     &>:last-child {
+    //         display: none;
+    //     }
+    // }
+}
+
+.button-icon {
+    @include u.square(25);
+
+    @include u.mqw-from(desktop) {
+        @include u.square(32);
+    }
+
+    @include u.mqw-from(hr) {
+        @include u.square(32, vw);
+    }
+}
+
+.link {
+    text-decoration: none;
+
+    &>* {
+        margin-bottom: u.rem($gap) !important;
+    }
+}

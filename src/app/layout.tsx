@@ -1,13 +1,9 @@
 import { DeviceInfoProvider } from "@/components/providers/device-info-provider";
-import "./../styles/main.scss";
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import ConfigureAmplifyClientSide from "@/lib/auth/amplify-cognito-config";
-
+import { Inter } from "next/font/google";
+import "./../styles/main.scss";
 
 const inter = Inter({ subsets: ["latin"] });
-
-
 
 export default function RootLayout({
   children,

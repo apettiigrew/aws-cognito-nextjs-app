@@ -32,7 +32,7 @@ const SignInSchema = Yup.object().shape({
 });
 
 export function LoginView() {
-    const [formstate, setFormState] = useState("initial");
+    
     const [errorCode, setErrorCode] = useState<SigninErrorTypes>(null);
     const router = useRouter();
 
@@ -69,6 +69,7 @@ export function LoginView() {
     const federatedSignInHandler = useCallback(async () => {
         try {
             signInWithRedirect({ provider: "Google" });
+            
         } catch (error) {
             return getErrorMessage(error);
         }
