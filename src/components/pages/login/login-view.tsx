@@ -1,9 +1,10 @@
 "use client";
 
-import { AWSCognitoCommonError, AWSCognitoError, AWSInitiateAuthError } from "@/lib/auth/cognito-api";
+import { AWSCognitoCommonError, AWSInitiateAuthError } from "@/lib/auth/cognito-api";
 import { getErrorMessage } from "@/lib/get-error-message";
 import { resendSignUpCode, signIn, signInWithRedirect } from "aws-amplify/auth";
 import { Form, Formik, FormikValues } from "formik";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import * as Yup from "yup";
@@ -11,8 +12,7 @@ import { GoogleIcon, WarningIcon } from "../../shared/icons/icons";
 import { AppButton, AppButtonVariation } from "../../shared/layout/buttons";
 import { InputField } from "../../shared/layout/input-field";
 import { Heading, SubHeading } from "../../text/subheading";
-import styles from "./forgot-password.module.scss";
-import Link from "next/link";
+import styles from "./login-view.module.scss";
 
 type SigninErrorTypes = AWSCognitoCommonError | "Unknown" | null;
 interface FormValues {
@@ -30,7 +30,7 @@ const SignInSchema = Yup.object().shape({
     password: Yup.string().required('Required'),
 });
 
-export function ForgotPasswordView() {
+export function LoginView() {
     const [formstate, setFormState] = useState("initial");
     const [errorCode, setErrorCode] = useState<SigninErrorTypes>(null);
     const router = useRouter();
@@ -61,15 +61,12 @@ export function ForgotPasswordView() {
                     setErrorCode("Unknown");
                 }
             }
-
-            // return getErrorMessage(error);
         }
     }, []);
 
     const federatedSignInHandler = useCallback(async () => {
         try {
             signInWithRedirect({ provider: "Google" });
-            // redirect("/dashboard");
         } catch (error) {
             return getErrorMessage(error);
         }
@@ -114,7 +111,8 @@ export function ForgotPasswordView() {
                                                         label="Password"
                                                         required={true}
                                                     />
-                                                    <p>Forget Password</p>
+                                                    <Link href={"/forgot-password/submit"}><p>Forget Password</p></Link>
+
                                                     <AppButton
                                                         type="submit"
                                                         ariaLabel="Submit button"

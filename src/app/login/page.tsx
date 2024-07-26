@@ -1,5 +1,5 @@
 
-import { LoginView } from "@/components/views//login/login-view";
+import { LoginView } from "@/components/pages/login/login-view";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
