@@ -30,7 +30,11 @@ const SignupSchema = Yup.object().shape({
     firstName: Yup.string().required("Please enter your first name").min(2, "Must be at least 2 characters").max(20, 'Must be 20 characters or less'),
     lastName: Yup.string().required("Please enter your last name").min(2, "Must be at least 2 characters").max(20, 'Must be 20 characters or less'),
     email: Yup.string().email().required("Please enter your email"),
-    password: Yup.string().required('Required'),
+    password: Yup.string()
+        .min(8, 'Password must be at least 8 characters')
+        .matches(/[a-z]+/, "Must contain at least one lowercase character")
+        .matches(/[A-Z]+/, "Must contain at least one uppercase character")
+        .matches(/[@$!%*#?&]+/, "Must contain at least one special character"),
 });
 
 

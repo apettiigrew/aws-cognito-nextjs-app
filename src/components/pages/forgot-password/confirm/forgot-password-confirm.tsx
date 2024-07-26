@@ -30,7 +30,11 @@ const initialValues: FormValues = {
 
 const SignInSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Please enter your email'),
-    password: Yup.string().required('Required'),
+    password: Yup.string()
+        .min(8, 'Password must be at least 8 characters')
+        .matches(/[a-z]+/, "Must contain at least one lowercase character")
+        .matches(/[A-Z]+/, "Must contain at least one uppercase character")
+        .matches(/[@$!%*#?&]+/, "Must contain at least one special character"),
     code: Yup.string().matches(/^[0-9]/, "Invalid Code").required('Required'),
 });
 
