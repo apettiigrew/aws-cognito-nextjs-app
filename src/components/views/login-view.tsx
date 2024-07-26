@@ -13,8 +13,9 @@ import { InputField } from "../shared/layout/input-field";
 import { Heading, SubHeading } from "../text/subheading";
 import styles from "./login-view.module.scss";
 import { RenderIf } from "@/lib/render-if";
+import Link from "next/link";
 
-type SigninErrorTypes = AWSCognitoCommonError | "Unknown" | null ;
+type SigninErrorTypes = AWSCognitoCommonError | "Unknown" | null;
 interface FormValues {
     email: string;
     password: string;
@@ -88,65 +89,69 @@ export function DesktopLoginView() {
                         </div>
                     </div>
                     <div className={styles["right-content"]}>
-                        <Formik
-                            initialValues={initialValues}
-                            onSubmit={onSubmitHandler}
-                            validateOnMount={true}
-                            validationSchema={SignInSchema}>
-                            {
+                        <div className={styles.container}>
+                            <Formik
+                                className={styles["form-container"]}
+                                initialValues={initialValues}
+                                onSubmit={onSubmitHandler}
+                                validateOnMount={true}
+                                validationSchema={SignInSchema}>
+                                {
+                                    (formik: FormikValues) => (
+                                        <>
+                                            <ErrorMessageBanner errorCode={errorCode} />
+                                            <SubHeading className={styles["desktop-heading"]}>Hey, Hello 👋</SubHeading>
+                                            <div>
+                                                <Form>
+                                                    <InputField
+                                                        type="text"
+                                                        name="email"
+                                                        label="Email"
+                                                        required={true}
+                                                    />
+                                                    <InputField
+                                                        type="password"
+                                                        name="password"
+                                                        label="Password"
+                                                        required={true}
+                                                    />
+                                                    <p>Forget Password</p>
+                                                    <AppButton
+                                                        type="submit"
+                                                        ariaLabel="Submit button"
+                                                        variation={AppButtonVariation.primaryDefault}
+                                                        className={styles["login-button"]}
+                                                        disabled={formik.isSubmitting}
+                                                    >
+                                                        Login
+                                                    </AppButton>
 
-                                (formik: FormikValues) => (
-                                    <div className={styles.container}>
-                                        <ErrorMessageBanner errorCode={errorCode} />
-                                        <SubHeading className={styles["desktop-heading"]}>Hey, Hello 👋</SubHeading>
-                                        <div>
-                                            <Form>
-                                                <InputField
-                                                    type="text"
-                                                    name="email"
-                                                    label="Email"
-                                                    required={true}
-                                                />
-                                                <InputField
-                                                    type="password"
-                                                    name="password"
-                                                    label="Password"
-                                                    required={true}
-                                                />
-                                                <p>Forget Password</p>
-                                                <AppButton
-                                                    type="submit"
-                                                    ariaLabel="Submit button"
-                                                    variation={AppButtonVariation.primaryDefault}
-                                                    className={styles["login-button"]}
-                                                    disabled={formik.isSubmitting}
-                                                >
-                                                    Login
-                                                </AppButton>
-
-                                                <div className={styles["horizontal-line"]}>
-                                                    <hr className={styles.line} />
-                                                    <small className={"border-text"}>or</small>
-                                                    <hr className={styles.line} />
-                                                </div>
-                                                <AppButton
-                                                    // disabled={!sValid}
-                                                    type="button"
-                                                    ariaLabel="Submit button"
-                                                    variation={AppButtonVariation.primaryWhiteBorder}
-                                                    className={styles["button-with-icon"]}
-                                                    onClick={federatedSignInHandler}
-                                                >
-                                                    <GoogleIcon className={styles["button-icon"]} />
-                                                    Continue With Google
-                                                </AppButton>
-                                            </Form>
-
-                                        </div>
-                                    </div>
-                                )
-                            }
-                        </Formik>
+                                                    <div className={styles["horizontal-line"]}>
+                                                        <hr className={styles.line} />
+                                                        <small className={"border-text"}>or</small>
+                                                        <hr className={styles.line} />
+                                                    </div>
+                                                    <AppButton
+                                                        // disabled={!sValid}
+                                                        type="button"
+                                                        ariaLabel="Submit button"
+                                                        variation={AppButtonVariation.primaryWhiteBorder}
+                                                        className={styles["button-with-icon"]}
+                                                        onClick={federatedSignInHandler}
+                                                    >
+                                                        <GoogleIcon className={styles["button-icon"]} />
+                                                        Continue With Google
+                                                    </AppButton>
+                                                </Form>
+                                            </div>
+                                        </>
+                                    )
+                                }
+                            </Formik>
+                            <Link className={styles["create-account-link"]} href={"/sign-up"}>
+                                <p>Create an account</p>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </div>
