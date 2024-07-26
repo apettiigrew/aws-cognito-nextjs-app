@@ -13,6 +13,7 @@ import { InputField } from "../../../shared/layout/input-field";
 import { Heading, SubHeading } from "../../../text/subheading";
 import styles from "./forgot-password-confirm.module.scss";
 import Link from "next/link";
+import { MessageBanner } from "@/components/shared/layout/banner/message-banner";
 
 type SigninErrorTypes = AWSCognitoCommonError | "Unknown" | null;
 interface FormValues {
@@ -34,8 +35,9 @@ const SignInSchema = Yup.object().shape({
         .min(8, 'Password must be at least 8 characters')
         .matches(/[a-z]+/, "Must contain at least one lowercase character")
         .matches(/[A-Z]+/, "Must contain at least one uppercase character")
-        .matches(/[@$!%*#?&]+/, "Must contain at least one special character"),
-    code: Yup.string().matches(/^[0-9]/, "Invalid Code").required('Required'),
+        .matches(/[@$!%*#?&]+/, "Must contain at least one special character")
+        .required('Please enter a password'),
+    code: Yup.string().matches(/^[0-9]/, "Invalid code").required('Code is required'),
 });
 
 export function ForgotPasswordConfirmView() {
@@ -52,8 +54,8 @@ export function ForgotPasswordConfirmView() {
             });
             router.push(link);
         } catch (error: unknown) {
-            // const e = error as AWSInitiateAuthError;
-            console.log(error);
+            const e = error as AWSInitiateAuthError;
+            setErrorCode(e.name);
         }
     }, []);
 
@@ -66,11 +68,14 @@ export function ForgotPasswordConfirmView() {
                             <Heading className={styles["left-content-heading"]} headingElement={1}>
                                 Hang tight, you're almost there
                             </Heading>
-                            {/* <SubHeading style={{ color: "white" }}>Marcus Aurelius</SubHeading> */}
+
                         </div>
                     </div>
                     <div className={styles["right-content"]}>
                         <div className={styles.container}>
+                            <Link href="/">
+                                <p>Back</p>
+                            </Link>
                             <Formik
                                 className={styles["form-container"]}
                                 initialValues={initialValues}
@@ -80,7 +85,7 @@ export function ForgotPasswordConfirmView() {
                                 {
                                     (formik: FormikValues) => (
                                         <>
-                                            <ErrorMessageBanner errorCode={errorCode} />
+                                            <MessageBanner state="error" errorCode={errorCode} />
                                             <SubHeading className={styles["desktop-heading"]}>Enter password reset details</SubHeading>
                                             <div>
                                                 <Form>
@@ -121,33 +126,5 @@ export function ForgotPasswordConfirmView() {
                 </div>
             </div>
         </main>
-    )
-}
-
-
-interface ErrorMessageBannerProps {
-    errorCode: SigninErrorTypes;
-}
-function ErrorMessageBanner(props: ErrorMessageBannerProps) {
-    const { errorCode } = props;
-    let message = "";
-    console.log(errorCode);
-    if (errorCode === null || errorCode === undefined) {
-        return null;
-    }
-
-    switch (errorCode) {
-        case "NotAuthorizedException":
-            message = "Incorrect credentials, please try again"
-            break;
-        case "Unknown":
-            message = "Something went wrong please try again later"
-    }
-
-    return (
-        <div className={styles["error-banner"]}>
-            <WarningIcon />
-            <p>{message}</p>
-        </div>
     )
 }

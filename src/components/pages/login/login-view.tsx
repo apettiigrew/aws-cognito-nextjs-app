@@ -13,8 +13,9 @@ import { AppButton, AppButtonVariation } from "../../shared/layout/buttons";
 import { InputField } from "../../shared/layout/input-field";
 import { Heading, SubHeading } from "../../text/subheading";
 import styles from "./login-view.module.scss";
+import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
 
-type SigninErrorTypes = AWSCognitoCommonError | "Unknown" | null;
+
 interface FormValues {
     email: string;
     password: string;
@@ -96,7 +97,7 @@ export function LoginView() {
                                 {
                                     (formik: FormikValues) => (
                                         <>
-                                            <ErrorMessageBanner errorCode={errorCode} />
+                                            <MessageBanner state="error" errorCode={errorCode} />
                                             <SubHeading className={styles["desktop-heading"]}>Hey, Hello 👋</SubHeading>
                                             <div>
                                                 <Form>
@@ -157,30 +158,3 @@ export function LoginView() {
     )
 }
 
-
-interface ErrorMessageBannerProps {
-    errorCode: SigninErrorTypes;
-}
-function ErrorMessageBanner(props: ErrorMessageBannerProps) {
-    const { errorCode } = props;
-    let message = "";
-    console.log(errorCode);
-    if (errorCode === null || errorCode === undefined) {
-        return null;
-    }
-
-    switch (errorCode) {
-        case "NotAuthorizedException":
-            message = "Incorrect credentials, please try again"
-            break;
-        case "Unknown":
-            message = "Something went wrong please try again later"
-    }
-
-    return (
-        <div className={styles["error-banner"]}>
-            <WarningIcon />
-            <p>{message}</p>
-        </div>
-    )
-}

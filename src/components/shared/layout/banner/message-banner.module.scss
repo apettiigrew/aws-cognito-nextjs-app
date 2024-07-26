@@ -1,0 +1,18 @@
+@use "./../../../../styles/utils/index" as u;
+
+
+.error-banner {
+    display: flex;
+    gap: u.rem(20);
+    justify-content: center;
+    align-items: center;
+    background-color: u.color(warning);
+    padding: u.rem(30);
+    text-align: center;
+    margin-bottom: u.rem(30);
+    border-radius: u.rem(5);
+
+    &>p {
+        margin: 0;
+    }
+}
