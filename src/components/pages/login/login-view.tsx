@@ -15,7 +15,8 @@ import { Heading, SubHeading } from "../../text/subheading";
 import styles from "./login-view.module.scss";
 import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
 import Image from "next/image";
-import cnTowerImg from "@/public/img/cn-tower.jpg";
+// import cnTowerImg from "./../../../../public/static/img/cn-tower.jpg";
+import cnTowerImg from "@img/cn-tower.jpg";
 
 interface FormValues {
     email: string;
@@ -33,7 +34,7 @@ const SignInSchema = Yup.object().shape({
 });
 
 export function LoginView() {
-    
+
     const [errorCode, setErrorCode] = useState<SigninErrorTypes>(null);
     const router = useRouter();
 
@@ -70,7 +71,7 @@ export function LoginView() {
     const federatedSignInHandler = useCallback(async () => {
         try {
             signInWithRedirect({ provider: "Google" });
-            
+
         } catch (error) {
             return getErrorMessage(error);
         }
@@ -81,10 +82,11 @@ export function LoginView() {
             <div className={styles.container}>
                 <div className={styles.content}>
                     <div className={styles["left-content"]}>
-                        <div className={styles['background-image']}>
-                            <Image src={cnTowerImg} alt="Image of CN Tower, Toronto"  />
+                        <div className={styles["left-content-img-wrapper"]}>
+                            <Image className={styles["background-image"]} src={cnTowerImg} alt="Image of CN Tower, Toronto" />
                         </div>
-                        <div className={styles["glass-container"]}>
+
+                        <div className={styles["left-content-text-overlay"]}>
                             <Heading className={styles["left-content-heading"]} headingElement={1}>
                                 It is a shame when the soul is first to give way in this life, and the body does not give way.
                             </Heading>
