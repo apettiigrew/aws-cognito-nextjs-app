@@ -11,6 +11,7 @@ import { AppButton, AppButtonVariation } from "../../../shared/layout/buttons";
 import { InputField } from "../../../shared/layout/input-field";
 import { Heading, SubHeading } from "../../../text/subheading";
 import styles from "./forgot-password.module.scss";
+import { toast } from "react-toastify";
 
 type SigninErrorTypes = AWSCognitoCommonError | "Unknown" | null;
 interface FormValues {
@@ -32,6 +33,9 @@ export function ForgotPasswordSubmitView() {
     const onSubmitHandler = useCallback(async (values: FormValues) => {
         try {
             await resetPassword({ username: String(values["email"]) });
+            toast.success("Forgot password code sent!", {
+                position: "top-right"
+            });
             router.push("/forgot-password/confirm");
         } catch (error: unknown) {
 

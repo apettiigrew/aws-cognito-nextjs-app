@@ -15,6 +15,7 @@ import styles from "./signup-view.module.scss";
 import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
 import { AWSInitiateAuthError } from "@/lib/auth/cognito-api";
 import { AuthInfoContext } from "@/components/providers/auth-context";
+import { toast } from "react-toastify";
 
 const propof = propertiesOf<FormValues>();
 interface FormValues {
@@ -46,7 +47,7 @@ export function SignUpView() {
     const router = useRouter();
     const authContext = useContext(AuthInfoContext);
 
-    
+
     const onSubmitHandler = useCallback(async (values: FormValues) => {
         try {
             setErrorCode(null);
@@ -64,8 +65,13 @@ export function SignUpView() {
                     autoSignIn: true,
                 },
             });
-            authContext.email = values.email;
+
+            authContext.setEmail(values.email);
+            toast.success("Confirmation code sent!", {
+                position: "top-right"
+            });
             router.push("/confirm-signup");
+
         } catch (error) {
             const e = error as AWSInitiateAuthError;
             setErrorCode(e.name);
