@@ -4,31 +4,36 @@ import { AppButton, AppButtonVariation } from "@/components/shared/layout/button
 import { InputField } from "@/components/shared/layout/input-field";
 import { Heading, SubHeading } from "@/components/text/subheading";
 import { getErrorMessage } from "@/lib/get-error-message";
-import { confirmSignUp, autoSignIn } from "aws-amplify/auth";
+import { confirmSignUp, autoSignIn, resendSignUpCode } from "aws-amplify/auth";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import * as Yup from "yup";
 import styles from "./confirm-signpu.module.scss";
 import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
 import { AWSInitiateAuthError } from "@/lib/auth/cognito-api";
+import { AuthInfoContext } from "@/components/providers/auth-context";
 
 interface FormValues {
     email: string;
     code: string;
 }
-const initialValues: FormValues = {
-    email: "",
-    code: "",
-}
+
 const ConfirmCodeSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Please enter your email'),
     code: Yup.string().required('Please enter a valid code'),
 });
 
 export function ConfirmSignUpView() {
+    const authContext = useContext(AuthInfoContext);
     const [errorCode, setErrorCode] = useState<SigninErrorTypes>(null);
     const router = useRouter();
+
+    const initialValues: FormValues = {
+        email: authContext.email,
+        code: "",
+    }
+
     const onSubmitHandler = useCallback(async (values: FormValues) => {
         try {
             setErrorCode(null);
@@ -37,12 +42,24 @@ export function ConfirmSignUpView() {
                 confirmationCode: String(values.code),
             });
             await autoSignIn();
-            router.push("/login");
+            router.push("/dashboard");
         } catch (error) {
             const e = error as AWSInitiateAuthError;
             setErrorCode(e.name);
         }
 
+    }, []);
+
+    const resendConfirmationCodeHandler = useCallback(async () => {
+        try {
+            const { email } = initialValues;
+            await resendSignUpCode({
+                username: String(authContext.email),
+            });
+        } catch (error) {
+            const e = error as AWSInitiateAuthError;
+            setErrorCode(e.name);
+        }
     }, []);
 
     return (
@@ -60,6 +77,7 @@ export function ConfirmSignUpView() {
                     <div className={styles["right-content"]}>
                         <div className={styles.container}>
                             <MessageBanner errorCode={errorCode} state="error" />
+                            <SubHeading>Confirm account</SubHeading>
                             <p>Check your email for the confirmation code</p>
                             <div>
                                 <Formik
@@ -73,6 +91,7 @@ export function ConfirmSignUpView() {
                                             name="email"
                                             label="Email"
                                             required={true}
+                                            disabled={true}
                                         />
                                         <InputField
                                             type="text"
@@ -80,6 +99,7 @@ export function ConfirmSignUpView() {
                                             label="Confirmation Code"
                                             required={true}
                                         />
+                                        <p className={styles["confirmation-code"]} onClick={resendConfirmationCodeHandler}>Resend  confirmation code</p>
                                         <AppButton
                                             type="submit"
                                             ariaLabel="Submit button"

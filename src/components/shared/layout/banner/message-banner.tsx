@@ -36,6 +36,10 @@ export function MessageBanner(props: ErrorMessageBannerProps) {
             message = "Password does not meet requirements"
             break;
 
+        case "UsernameExistsException":
+            message = "Username already exists"
+            break;
+
         case "Unknown":
         default:
             message = "Something went wrong please try again later"

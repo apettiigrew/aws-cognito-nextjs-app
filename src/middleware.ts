@@ -14,22 +14,22 @@ export async function middleware(request: NextRequest) {
     console.log("User is not authenticated");
     return NextResponse.redirect(new URL("/login", request.nextUrl));
   } else {
-    return NextResponse.next();
+    const isOnDashboard = request.nextUrl.pathname.startsWith("/dashboard");
+    const isOnAdminArea =
+      request.nextUrl.pathname.startsWith("/dashboard/admins");
+
+    if (isOnDashboard) {
+      if (!user)
+        return NextResponse.redirect(new URL("/login", request.nextUrl));
+      if (isOnAdminArea && !user.isAdmin)
+        return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
+      return response;
+    } else if (user) {
+      return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
+    }
   }
 
-  // const isOnDashboard = request.nextUrl.pathname.startsWith("/dashboard");
-  // const isOnAdminArea =
-  //   request.nextUrl.pathname.startsWith("/dashboard/admins");
 
-  // if (isOnDashboard) {
-  //   if (!user)
-  //     return NextResponse.redirect(new URL("/login", request.nextUrl));
-  //   if (isOnAdminArea && !user.isAdmin)
-  //     return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
-  //   return response;
-  // } else if (user) {
-  //   return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
-  // }
 }
 
 export const config = {

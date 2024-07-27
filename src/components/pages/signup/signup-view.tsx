@@ -9,11 +9,12 @@ import { signUp } from "aws-amplify/auth";
 import { Form, Formik } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import * as Yup from "yup";
 import styles from "./signup-view.module.scss";
 import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
 import { AWSInitiateAuthError } from "@/lib/auth/cognito-api";
+import { AuthInfoContext } from "@/components/providers/auth-context";
 
 const propof = propertiesOf<FormValues>();
 interface FormValues {
@@ -43,6 +44,9 @@ const SignupSchema = Yup.object().shape({
 export function SignUpView() {
     const [errorCode, setErrorCode] = useState<SigninErrorTypes>(null);
     const router = useRouter();
+    const authContext = useContext(AuthInfoContext);
+
+    
     const onSubmitHandler = useCallback(async (values: FormValues) => {
         try {
             setErrorCode(null);
@@ -60,7 +64,7 @@ export function SignUpView() {
                     autoSignIn: true,
                 },
             });
-
+            authContext.email = values.email;
             router.push("/confirm-signup");
         } catch (error) {
             const e = error as AWSInitiateAuthError;

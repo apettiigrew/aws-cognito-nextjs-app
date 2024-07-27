@@ -13,6 +13,7 @@ type Props = {
     type: string;
     className?: string;
     validate?: (value: string) => string | undefined;
+    disabled?: boolean;
 };
 
 type InputFieldProps = Props;

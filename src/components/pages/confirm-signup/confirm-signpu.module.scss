@@ -110,10 +110,10 @@ $gap: 30;
         background-color: u.color(primary-marine-blue);
         padding-top: u.rem($padding-top);
         flex: 0 1 50%;
-        
+
         @include u.mqw-from(tablet_l) {
             display: block;
-            
+
             // padding-top: u.rem(150);
         }
     }
@@ -235,4 +235,13 @@ $gap: 30;
     @include u.mqw-from(hr) {
         @include u.square(32, vw);
     }
+}
+
+.confirmation-code:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.confirmation-code {
+    color: u.color(neutral-cool-gray);
 }

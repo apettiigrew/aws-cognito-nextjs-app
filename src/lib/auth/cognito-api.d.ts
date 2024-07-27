@@ -14,7 +14,8 @@ type AWSCognitoInitiateAuthErrorCodes =
     "UnexpectedLambdaException" |
     "UserLambdaValidationException" |
     "UserNotConfirmedException" |
-    "UserNotFoundException"
+    "UserNotFoundException" |
+    "UsernameExistsException"
     ;
 
 // https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_ConfirmForgotPassword.html#API_ConfirmForgotPassword_Errors
