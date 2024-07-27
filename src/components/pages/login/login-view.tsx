@@ -14,7 +14,8 @@ import { InputField } from "../../shared/layout/input-field";
 import { Heading, SubHeading } from "../../text/subheading";
 import styles from "./login-view.module.scss";
 import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
-
+import Image from "next/image";
+import cnTowerImg from "@/public/img/cn-tower.jpg";
 
 interface FormValues {
     email: string;
@@ -80,6 +81,9 @@ export function LoginView() {
             <div className={styles.container}>
                 <div className={styles.content}>
                     <div className={styles["left-content"]}>
+                        <div className={styles['background-image']}>
+                            <Image src={cnTowerImg} alt="Image of CN Tower, Toronto"  />
+                        </div>
                         <div className={styles["glass-container"]}>
                             <Heading className={styles["left-content-heading"]} headingElement={1}>
                                 It is a shame when the soul is first to give way in this life, and the body does not give way.
