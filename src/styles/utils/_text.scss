@@ -9,16 +9,50 @@ $default-text-color: c.color(neutral-black);
 	color: $default-text-color;
 	font-family: fs.ff(primary);
 	font-weight: 700;
-	font-size: fs.fs(47.78);
+	font-size: fs.fs(21);
 	margin-bottom: f.rem(10);
+
+	@include fs.fs-mq(28, tablet_l);
+	@include fs.fs-mq(37, desktop_s);
+	@include fs.fs-mq(48, desktop);
+
+	@include mq.mqw-from(tablet_l) {
+		margin-bottom: f.rem(13);
+	}
+	@include mq.mqw-from(desktop_s) {
+		margin-bottom: f.rem(17);
+	}
+	@include mq.mqw-from(desktop) {
+		margin-bottom: f.rem(22);
+	}
+	@include mq.mqw-from(desktop) {
+		margin-bottom: f.px_to_vw(22);
+	}
 }
 
 @mixin h5-styles() {
 	color: $default-text-color;
 	font-family: fs.ff(primary);
 	font-weight: 700;
-	font-size: fs.fs(23.04);
+	font-size: fs.fs(16);
 	margin-bottom: f.rem(10);
+
+	@include fs.fs-mq(18, tablet_l);
+	@include fs.fs-mq(23, desktop_s);
+	@include fs.fs-mq(30, desktop);
+
+	@include mq.mqw-from(tablet_l) {
+		margin-bottom: f.rem(13);
+	}
+	@include mq.mqw-from(desktop_s) {
+		margin-bottom: f.rem(17);
+	}
+	@include mq.mqw-from(desktop) {
+		margin-bottom: f.rem(22);
+	}
+	@include mq.mqw-from(desktop) {
+		margin-bottom: f.px_to_vw(22);
+	}
 }
 
 @mixin h6-styles() {

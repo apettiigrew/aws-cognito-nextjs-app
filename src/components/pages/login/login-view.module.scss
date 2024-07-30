@@ -1,12 +1,14 @@
 @use "./../../../styles/utils/index" as u;
 
+$padding-top: 100;
+$inner-content-heading-space: 40;
+$gap: 30;
+
 .container {
     margin: 0 auto;
 
     &>form>div {
         margin-bottom: u.rem(20);
-
-
     }
 
     @include u.mqw-from(tablet_p) {
@@ -15,37 +17,31 @@
 
     @include u.mqw-from(tablet_l) {
         width: 60%;
+
+        width: 45%;
+
+        &>form>div {
+            margin-bottom: u.rem(26);
+        }
     }
 
     @include u.mqw-from(desktop_s) {
         width: 45%;
 
         &>form>div {
-            margin-bottom: u.rem(26);
-
-            &.push {
-                margin-bottom: u.rem(98);
-            }
+            margin-bottom: u.rem(34);
         }
     }
 
     @include u.mqw-from(desktop) {
         &>form>div {
-            margin-bottom: u.rem(34);
-
-            &.push {
-                margin-bottom: u.rem(130);
-            }
+            margin-bottom: u.rem(44);
         }
     }
 
     @include u.mqw-from(hr) {
         &>form>div {
-            margin-bottom: u.px_to_vw(34);
-
-            &.push {
-                margin-bottom: u.px_to_vw(130);
-            }
+            margin-bottom: u.px_to_vw(44);
         }
     }
 }
@@ -55,19 +51,13 @@
     line-height: 1.5;
 }
 
-$padding-top: 100;
-$inner-content-heading-space: 40;
-$gap: 30;
-
 .main {
-    // background-color: u.color(neutral-light-gray);
     display: flex;
     flex-grow: 1;
     flex-shrink: 0;
 }
 
 .container {
-    // background-color: red;
     margin: 0 auto;
     width: 100%;
 }
@@ -75,7 +65,23 @@ $gap: 30;
 .step-label-container {
     display: flex;
     flex-direction: column;
-    gap: u.rem($gap);
+    gap: u.rem(30);
+
+    @include u.mqw-from(tablet_l) {
+        gap: u.rem(39);
+    }
+
+    @include u.mqw-from(desktop_s) {
+        gap: u.rem(50);
+    }
+
+    @include u.mqw-from(desktop) {
+        gap: u.rem(65);
+    }
+
+    @include u.mqw-from(hr) {
+        gap: u.px_to_vw(65);
+    }
 }
 
 .content {
@@ -84,76 +90,61 @@ $gap: 30;
     width: 100%;
     height: 100%;
 
-    // &>* {
-    //     padding: u.rem(40);
-    // }
-
     &>.left-content {
         position: relative;
         width: 100%;
-
         display: none;
         background-color: u.color(primary-marine-blue);
-        // padding-top: u.rem($padding-top);
         margin: u.rem(20);
         border-radius: u.rem(10);
         flex: 1 1 50%;
 
         @include u.mqw-from(tablet_l) {
             display: block;
-            // padding-top: u.rem(150);
+            margin: u.rem(26);
+            border-radius: u.rem(13);
+        }
+
+        @include u.mqw-from(desktop_s) {
+            margin: u.rem(34);
+            border-radius: u.rem(13);
+        }
+
+        @include u.mqw-from(destkop) {
+            margin: u.rem(44);
+            border-radius: u.rem(17);
+        }
+
+        @include u.mqw-from(hr) {
+            margin: u.px_to_vw(44);
+            border-radius: u.px_to_vw(17);
         }
     }
 
     &>.right-content {
-        padding: u.rem(40);
-        padding-top: u.rem($padding-top);
+        padding: u.rem(40) u.rem(40) u.rem(0) u.rem(40);
         background-color: white;
         flex: 1 0 50%;
+
+        @include u.mqw-from(desktop) {
+            padding-top: u.rem(52);
+        }
+
+        @include u.mqw-from(desktop) {
+            padding-top: u.rem(52);
+        }
+
+        @include u.mqw-from(hr) {
+            padding-top: u.px_to_vw(52);
+        }
     }
 }
 
-.icon {
-    @include u.square(24);
-}
-
-.left-content-headings {
-    margin-bottom: u.rem($inner-content-heading-space);
-}
-
-.right-content-headings {
-    margin-bottom: u.rem($inner-content-heading-space);
-}
-
-.form-content {
-    display: flex;
-    flex-direction: column;
-    gap: u.rem($gap);
-    margin-bottom: u.rem($gap);
-
-    &>* {
-        width: 60%;
-    }
-}
 
 .button-wrapper {
     display: flex;
     min-width: auto;
-    // justify-content: flex-end;
     gap: u.rem($gap);
-}
-
-.input-group {
-    display: flex;
-    gap: u.rem($gap);
-
-    &>* {
-        flex: 1 0;
-    }
-}
-
-.heading-text {
-    width: 65%;
 }
 
 .login-button {
@@ -226,11 +217,6 @@ $gap: 30;
     text-decoration: underline;
 }
 
-.background-image-wrapper {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
 
 .background-image {
     object-fit: cover;
@@ -243,10 +229,7 @@ $gap: 30;
     position: absolute;
     top: 0;
     left: 0;
-    // padding-top: u.rem(40);
     padding: u.rem(40) u.rem(30);
-    // transform: translate(-50%, -50%);
-    // color: white;   
 }
 
 .left-content-img-wrapper {
