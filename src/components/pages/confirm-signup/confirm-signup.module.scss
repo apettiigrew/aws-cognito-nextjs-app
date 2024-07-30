@@ -1,0 +1,101 @@
+@use "./../../../styles/utils/index" as u;
+
+
+
+$padding-top: 100;
+$inner-content-heading-space: 40;
+$gap: 30;
+
+.container {
+    margin: 0 auto;
+    width: 100%;
+
+    &>form>div {
+        margin-bottom: u.rem(20);
+    }
+
+    @include u.mqw-from(tablet_l) {
+
+
+        &>form>div {
+            margin-bottom: u.rem(26);
+        }
+    }
+
+    @include u.mqw-from(desktop_s) {
+
+        &>form>div {
+            margin-bottom: u.rem(34);
+        }
+    }
+
+    @include u.mqw-from(desktop) {
+        &>form>div {
+            margin-bottom: u.rem(44);
+        }
+    }
+
+    @include u.mqw-from(hr) {
+        &>form>div {
+            margin-bottom: u.px_to_vw(44);
+        }
+    }
+}
+
+.main {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.step-label-container {
+    display: flex;
+    flex-direction: column;
+    gap: u.rem($gap);
+}
+
+.content {
+    display: flex;
+    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    padding: u.rem(40);
+
+    @include u.mqw-from(tablet_l) {
+        width: 60%;
+    }
+
+    @include u.mqw-from(desktop_s) {
+        width: 45%;
+    }
+
+    @include u.mqw-from(desktop) {
+        width: 45%;
+    }
+}
+
+.login-button {
+    width: 100%;
+    margin-bottom: u.rem(30);
+
+    @include u.mqw-from(desktop_s) {
+        margin-bottom: u.rem(40);
+    }
+
+    @include u.mqw-from(desktop) {
+        margin-bottom: u.rem(52);
+    }
+
+    @include u.mqw-from(hr) {
+        margin-bottom: u.px_to_vw(52);
+    }
+}
+
+.confirmation-code:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.confirmation-code {
+    color: u.color(neutral-cool-gray);
+}

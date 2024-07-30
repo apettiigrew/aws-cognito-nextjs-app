@@ -9,12 +9,12 @@ $default-text-color: c.color(neutral-black);
 	color: $default-text-color;
 	font-family: fs.ff(primary);
 	font-weight: 700;
-	font-size: fs.fs(21);
+	font-size: fs.fs(48);
 	margin-bottom: f.rem(10);
 
-	@include fs.fs-mq(28, tablet_l);
-	@include fs.fs-mq(37, desktop_s);
-	@include fs.fs-mq(48, desktop);
+	// @include fs.fs-mq(28, tablet_l);
+	// @include fs.fs-mq(37, desktop_s);
+	// @include fs.fs-mq(48, desktop);
 
 	@include mq.mqw-from(tablet_l) {
 		margin-bottom: f.rem(13);
@@ -34,12 +34,12 @@ $default-text-color: c.color(neutral-black);
 	color: $default-text-color;
 	font-family: fs.ff(primary);
 	font-weight: 700;
-	font-size: fs.fs(16);
+	font-size: fs.fs(23);
 	margin-bottom: f.rem(10);
 
-	@include fs.fs-mq(18, tablet_l);
-	@include fs.fs-mq(23, desktop_s);
-	@include fs.fs-mq(30, desktop);
+	// @include fs.fs-mq(26, tablet_l);
+	// @include fs.fs-mq(34, desktop_s);
+	// @include fs.fs-mq(44, desktop);
 
 	@include mq.mqw-from(tablet_l) {
 		margin-bottom: f.rem(13);
