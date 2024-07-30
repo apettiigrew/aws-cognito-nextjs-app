@@ -6,7 +6,7 @@ import { resendSignUpCode, signIn, signInWithRedirect } from "aws-amplify/auth";
 import { Form, Formik, FormikValues } from "formik";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import * as Yup from "yup";
 import { GoogleIcon, WarningIcon } from "../../shared/icons/icons";
 import { AppButton, AppButtonVariation } from "../../shared/layout/buttons";
@@ -17,6 +17,8 @@ import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/bann
 import Image from "next/image";
 // import cnTowerImg from "./../../../../public/static/img/cn-tower.jpg";
 import cnTowerImg from "@img/cn-tower.jpg";
+import { useStoicQuote } from "@/hooks/use-stoic-qoute";
+import { RenderIf } from "@/lib/render-if";
 
 interface FormValues {
     email: string;
@@ -37,7 +39,7 @@ export function LoginView() {
 
     const [errorCode, setErrorCode] = useState<SigninErrorTypes>(null);
     const router = useRouter();
-
+    const { data, error, loading } = useStoicQuote();
     const onSubmitHandler = useCallback(async (values: FormValues) => {
         try {
             setErrorCode(null);
@@ -77,6 +79,18 @@ export function LoginView() {
         }
     }, []);
 
+    const quoteText = useMemo(() => {
+        return error === null && !loading && data != null
+            ? data.text
+            : "It is a shame when the soul is first to give way in this life, and the body does not give way.";
+    }, [error, loading, data]);
+
+    const qouteAuthor = useMemo(() => {
+        return error === null && !loading && data != null
+            ? data.author
+            : "Marcus Aurelius";
+    }, [error, loading, data]);
+
     return (
         <main className={styles.main}>
             <div className={styles.container}>
@@ -87,10 +101,13 @@ export function LoginView() {
                         </div>
 
                         <div className={styles["left-content-text-overlay"]}>
-                            <Heading className={styles["left-content-heading"]} headingElement={1}>
-                                It is a shame when the soul is first to give way in this life, and the body does not give way.
-                            </Heading>
-                            <SubHeading style={{ color: "white" }}>Marcus Aurelius</SubHeading>
+                            <RenderIf isTrue={error === null && data != null}>
+                                <Heading className={styles["left-content-heading"]} headingElement={1}>
+                                    {data?.text}
+                                </Heading>
+                                <SubHeading style={{ color: "white" }}>{data?.author}</SubHeading>
+                            </RenderIf>
+
                         </div>
                     </div>
                     <div className={styles["right-content"]}>
