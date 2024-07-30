@@ -1,21 +1,22 @@
 "use client";
 
+import { AuthInfoContext } from "@/components/providers/auth-context";
+import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
 import { AppButton, AppButtonVariation } from "@/components/shared/layout/buttons";
 import { InputField } from "@/components/shared/layout/input-field";
 import { Heading, SubHeading } from "@/components/text/subheading";
-import { getErrorMessage } from "@/lib/get-error-message";
+import { AWSInitiateAuthError } from "@/lib/auth/cognito-api";
 import { propertiesOf } from "@/lib/utils/constants";
 import { signUp } from "aws-amplify/auth";
 import { Form, Formik } from "formik";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useState } from "react";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 import styles from "./signup-view.module.scss";
-import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
-import { AWSInitiateAuthError } from "@/lib/auth/cognito-api";
-import { AuthInfoContext } from "@/components/providers/auth-context";
-import { toast } from "react-toastify";
+import views from "@img/views.jpg";
 
 const propof = propertiesOf<FormValues>();
 interface FormValues {
@@ -83,11 +84,18 @@ export function SignUpView() {
             <div className={styles.container}>
                 <div className={styles.content}>
                     <div className={styles["left-content"]}>
-                        <div className={styles["glass-container"]}>
+                        <div className={styles["left-content-img-wrapper"]}>
+                            <Image className={styles["background-image"]} src={views} alt="Image of a building, Toronto" />
+                        </div>
+
+                        <div className={styles["left-content-text-overlay"]}>
+
                             <Heading className={styles["left-content-heading"]} headingElement={1}>
-                                Let's Go, Happy to have you onboard 😁
+                                Let's Go, Happy to have you onboard.
                             </Heading>
-                            {/* <SubHeading style={{ color: "white" }}>Marcus Aurelius</SubHeading> */}
+                            {/* <SubHeading style={{ color: "white" }}>{data?.author}</SubHeading> */}
+
+
                         </div>
                     </div>
                     <div className={styles["right-content"]}>
