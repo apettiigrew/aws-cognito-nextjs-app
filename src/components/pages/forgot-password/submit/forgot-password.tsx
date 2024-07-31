@@ -12,7 +12,9 @@ import { InputField } from "../../../shared/layout/input-field";
 import { Heading, SubHeading } from "../../../text/subheading";
 import styles from "./forgot-password.module.scss";
 import { toast } from "react-toastify";
-
+import Image from "next/image";
+import cityImg from "@img/city.jpg";
+import { MessageBanner } from "@/components/shared/layout/banner/message-banner";
 type SigninErrorTypes = AWSCognitoCommonError | "Unknown" | null;
 interface FormValues {
     email: string;
@@ -47,11 +49,14 @@ export function ForgotPasswordSubmitView() {
             <div className={styles.container}>
                 <div className={styles.content}>
                     <div className={styles["left-content"]}>
-                        <div className={styles["glass-container"]}>
+                        <div className={styles["left-content-img-wrapper"]}>
+                            <Image className={styles["background-image"]} src={cityImg} alt="Image of CN Tower, Toronto" />
+                        </div>
+
+                        <div className={styles["left-content-text-overlay"]}>
                             <Heading className={styles["left-content-heading"]} headingElement={1}>
-                                It's ok, we got you covered.
+                                It's ok we've got you covered
                             </Heading>
-                            {/* <SubHeading style={{ color: "white" }}>Marcus Aurelius</SubHeading> */}
                         </div>
                     </div>
                     <div className={styles["right-content"]}>
@@ -65,7 +70,7 @@ export function ForgotPasswordSubmitView() {
                                 {
                                     (formik: FormikValues) => (
                                         <>
-                                            <ErrorMessageBanner errorCode={errorCode} />
+                                            <MessageBanner state="error" errorCode={errorCode} />
                                             <SubHeading className={styles["desktop-heading"]}>Forgot password?</SubHeading>
                                             <p>Enter your email address and we’ll send you a code to reset your password.</p>
                                             <div>
@@ -97,33 +102,5 @@ export function ForgotPasswordSubmitView() {
                 </div>
             </div>
         </main>
-    )
-}
-
-
-interface ErrorMessageBannerProps {
-    errorCode: SigninErrorTypes;
-}
-function ErrorMessageBanner(props: ErrorMessageBannerProps) {
-    const { errorCode } = props;
-    let message = "";
-    console.log(errorCode);
-    if (errorCode === null || errorCode === undefined) {
-        return null;
-    }
-
-    switch (errorCode) {
-        case "NotAuthorizedException":
-            message = "Incorrect credentials, please try again"
-            break;
-        case "Unknown":
-            message = "Something went wrong please try again later"
-    }
-
-    return (
-        <div className={styles["error-banner"]}>
-            <WarningIcon />
-            <p>{message}</p>
-        </div>
     )
 }
