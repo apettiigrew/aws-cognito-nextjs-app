@@ -63,65 +63,56 @@ export function ForgotPasswordConfirmView() {
         <main className={styles.main}>
             <div className={styles.container}>
                 <div className={styles.content}>
-                    <div className={styles["left-content"]}>
-                        <div className={styles["glass-container"]}>
-                            <Heading className={styles["left-content-heading"]} headingElement={1}>
-                                Hang tight, you're almost there
-                            </Heading>
 
-                        </div>
-                    </div>
-                    <div className={styles["right-content"]}>
-                        <div className={styles.container}>
-                            <Link href="/">
-                                <p>Back</p>
-                            </Link>
-                            <Formik
-                                className={styles["form-container"]}
-                                initialValues={initialValues}
-                                onSubmit={onSubmitHandler}
-                                validateOnMount={true}
-                                validationSchema={SignInSchema}>
-                                {
-                                    (formik: FormikValues) => (
-                                        <>
-                                            <MessageBanner state="error" errorCode={errorCode} />
-                                            <SubHeading className={styles["desktop-heading"]}>Enter password reset details</SubHeading>
-                                            <div>
-                                                <Form>
-                                                    <InputField
-                                                        type="text"
-                                                        name="email"
-                                                        label="Email"
-                                                        required={true}
-                                                    />
-                                                    <InputField
-                                                        type="password"
-                                                        name="password"
-                                                        label="New Password"
-                                                        required={true}
-                                                    />
-                                                    <InputField
-                                                        type="text"
-                                                        name="code"
-                                                        label="Confirmation Code"
-                                                        required={true}
-                                                    />
-                                                    <AppButton
-                                                        type="submit"
-                                                        ariaLabel="Submit button"
-                                                        variation={AppButtonVariation.primaryDefault}
-                                                        className={styles["login-button"]}
-                                                        disabled={formik.isSubmitting}>
-                                                        Save
-                                                    </AppButton>
-                                                </Form>
-                                            </div>
-                                        </>
-                                    )
-                                }
-                            </Formik>
-                        </div>
+                    <div className={styles.container}>
+                        <Link href="/">
+                            <p>Back</p>
+                        </Link>
+                        <Formik
+                            className={styles["form-container"]}
+                            initialValues={initialValues}
+                            onSubmit={onSubmitHandler}
+                            validateOnMount={true}
+                            validationSchema={SignInSchema}>
+                            {
+                                (formik: FormikValues) => (
+                                    <>
+                                        <MessageBanner state="error" errorCode={errorCode} />
+                                        <SubHeading className={styles["desktop-heading"]}>Enter password reset details</SubHeading>
+                                        <div>
+                                            <Form>
+                                                <InputField
+                                                    type="text"
+                                                    name="email"
+                                                    label="Email"
+                                                    required={true}
+                                                />
+                                                <InputField
+                                                    type="password"
+                                                    name="password"
+                                                    label="New Password"
+                                                    required={true}
+                                                />
+                                                <InputField
+                                                    type="text"
+                                                    name="code"
+                                                    label="Confirmation Code"
+                                                    required={true}
+                                                />
+                                                <AppButton
+                                                    type="submit"
+                                                    ariaLabel="Submit button"
+                                                    variation={AppButtonVariation.primaryDefault}
+                                                    className={styles["login-button"]}
+                                                    disabled={formik.isSubmitting}>
+                                                    Save
+                                                </AppButton>
+                                            </Form>
+                                        </div>
+                                    </>
+                                )
+                            }
+                        </Formik>
                     </div>
                 </div>
             </div>

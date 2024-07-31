@@ -122,11 +122,15 @@ $inner-content-heading-space: 40;
         flex: 1 0 50%;
 
         @include u.mqw-from(desktop_s) {
-            padding-top: u.rem(52);
+            padding: u.rem(52) u.rem(52) u.rem(0) u.rem(52);
+        }
+
+        @include u.mqw-from(desktop) {
+            padding: u.rem(67) u.rem(67) u.rem(0) u.rem(67);
         }
 
         @include u.mqw-from(hr) {
-            padding-top: u.px_to_vw(52);
+            padding: u.px_to_vw(67) u.px_to_vw(67) u.px_to_vw(0) u.px_to_vw(67);
         }
     }
 }

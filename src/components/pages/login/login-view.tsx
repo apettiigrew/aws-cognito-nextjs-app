@@ -39,7 +39,7 @@ export function LoginView() {
 
     const [errorCode, setErrorCode] = useState<SigninErrorTypes>(null);
     const router = useRouter();
-    const { data, error, loading } = useStoicQuote();
+
     const onSubmitHandler = useCallback(async (values: FormValues) => {
         try {
             setErrorCode(null);
@@ -79,18 +79,6 @@ export function LoginView() {
         }
     }, []);
 
-    const quoteText = useMemo(() => {
-        return error === null && !loading && data != null
-            ? data.text
-            : "It is a shame when the soul is first to give way in this life, and the body does not give way.";
-    }, [error, loading, data]);
-
-    const qouteAuthor = useMemo(() => {
-        return error === null && !loading && data != null
-            ? data.author
-            : "Marcus Aurelius";
-    }, [error, loading, data]);
-
     return (
         <main className={styles.main}>
             <div className={styles.container}>
@@ -101,13 +89,10 @@ export function LoginView() {
                         </div>
 
                         <div className={styles["left-content-text-overlay"]}>
-                            <RenderIf isTrue={error === null && data != null}>
-                                <Heading className={styles["left-content-heading"]} headingElement={1}>
-                                    {data?.text}
-                                </Heading>
-                                <SubHeading style={{ color: "white" }}>{data?.author}</SubHeading>
-                            </RenderIf>
-
+                            <Heading className={styles["left-content-heading"]} headingElement={1}>
+                                You must lay aside the burdens of the mind; until you do this, no place will satisfy you.
+                            </Heading>
+                            <SubHeading style={{ color: "white" }}>Seneca</SubHeading>
                         </div>
                     </div>
                     <div className={styles["right-content"]}>
