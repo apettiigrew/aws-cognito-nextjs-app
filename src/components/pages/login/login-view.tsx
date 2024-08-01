@@ -1,24 +1,21 @@
 "use client";
 
-import { AWSCognitoCommonError, AWSInitiateAuthError } from "@/lib/auth/cognito-api";
+import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
+import { AWSInitiateAuthError } from "@/lib/auth/cognito-api";
 import { getErrorMessage } from "@/lib/get-error-message";
+import cnTowerImg from "@img/cn-tower.jpg";
 import { resendSignUpCode, signIn, signInWithRedirect } from "aws-amplify/auth";
 import { Form, Formik, FormikValues } from "formik";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import * as Yup from "yup";
-import { GoogleIcon, WarningIcon } from "../../shared/icons/icons";
+import { GoogleIcon } from "../../shared/icons/icons";
 import { AppButton, AppButtonVariation } from "../../shared/layout/buttons";
 import { InputField } from "../../shared/layout/input-field";
 import { Heading, SubHeading } from "../../text/subheading";
 import styles from "./login-view.module.scss";
-import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
-import Image from "next/image";
-// import cnTowerImg from "./../../../../public/static/img/cn-tower.jpg";
-import cnTowerImg from "@img/cn-tower.jpg";
-import { useStoicQuote } from "@/hooks/use-stoic-qoute";
-import { RenderIf } from "@/lib/render-if";
 
 interface FormValues {
     email: string;
@@ -72,7 +69,10 @@ export function LoginView() {
 
     const federatedSignInHandler = useCallback(async () => {
         try {
+            // const response = await fetch("/api/auth/google-signin", { method: "GET" });
+            // console.log(response);
             signInWithRedirect({ provider: "Google" });
+            console.log("Federated sign in with Google");
 
         } catch (error) {
             return getErrorMessage(error);

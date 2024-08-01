@@ -1,5 +1,4 @@
 "use client";
-import { useGetCurrentUser } from '@/hooks/use-get-current-user';
 import { fetchUserAttributes, getCurrentUser, signOut } from "aws-amplify/auth";
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -8,16 +7,19 @@ import { useEffect } from 'react';
 export default function DashboardPage() {
     const router = useRouter();
 
-    async function handleFetchUserAttributes() {
-        try {
-            const userAttributes = await fetchUserAttributes();
-            console.log(userAttributes);
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     useEffect(() => {
+        async function handleFetchUserAttributes() {
+            try {
+                console.log("fetching user attributes");
+                const userAttributes = await fetchUserAttributes();
+                const user = await getCurrentUser();
+                console.log(userAttributes);
+                console.log(user);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
         handleFetchUserAttributes();
         // getUser();
     }, [])
