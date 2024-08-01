@@ -1,20 +1,25 @@
 "use client";
-import { fetchUserAttributes, getCurrentUser, signOut } from "aws-amplify/auth";
+import { AuthContextProvicer, AuthInfoContext } from "@/components/providers/auth-context";
+import { fetchAuthSession, fetchUserAttributes, getCurrentUser, signOut, } from "aws-amplify/auth";
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 
 
 export default function DashboardPage() {
     const router = useRouter();
-
+    const authContext  = useContext(AuthInfoContext);
+    console.log(authContext.user);
     useEffect(() => {
+
         async function handleFetchUserAttributes() {
             try {
-                console.log("fetching user attributes");
-                const userAttributes = await fetchUserAttributes();
+                // console.log("fetching user attributes");
+                // const userAttributes = await fetchUserAttributes();
                 const user = await getCurrentUser();
-                console.log(userAttributes);
-                console.log(user);
+                const authSession = await fetchAuthSession()
+                // console.log(userAttributes);
+                // console.log(`dashboard, user: ${user}`);
+                // console.log(`authSession: ${authSession.credentials}`);
             } catch (error) {
                 console.log(error);
             }
@@ -26,7 +31,7 @@ export default function DashboardPage() {
 
 
     function handleLogout() {
-        console.log("button clicked");
+        console.log("logout button clicked");
         signOut().then(() => {
             router.push('/login');
         }

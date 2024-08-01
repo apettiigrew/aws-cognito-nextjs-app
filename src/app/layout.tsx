@@ -12,8 +12,8 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
   return (
     <html lang="en">
       <body className={inter.className}>
+        <ConfigureAmplifyClientSide />
         <DeviceInfoProvider>
-          <ConfigureAmplifyClientSide />
           <AuthContextProvicer>
             {children}
             <ToastContainer />

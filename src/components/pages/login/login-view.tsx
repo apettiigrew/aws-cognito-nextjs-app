@@ -16,6 +16,7 @@ import { AppButton, AppButtonVariation } from "../../shared/layout/buttons";
 import { InputField } from "../../shared/layout/input-field";
 import { Heading, SubHeading } from "../../text/subheading";
 import styles from "./login-view.module.scss";
+import { buildIdpSignInUrl, CognitoIdpSignInUrlBuildResult, setThirdPartyAuthorizeRedirectData, sha256 } from "@/lib/auth/amplify-cognito-config";
 
 interface FormValues {
     email: string;
@@ -67,17 +68,44 @@ export function LoginView() {
         }
     }, []);
 
-    const federatedSignInHandler = useCallback(async () => {
-        try {
-            // const response = await fetch("/api/auth/google-signin", { method: "GET" });
-            // console.log(response);
-            signInWithRedirect({ provider: "Google" });
-            console.log("Federated sign in with Google");
+    const onCognitoIdpSignInBuildResult = useCallback((result: CognitoIdpSignInUrlBuildResult) => {
+        // console.log("Cognito idp build result:", result);
+        if (result.success) {
+            // Redirect user to identity provider sign in
+            window.location.assign(result.url);
+        } else {
+            // Potentially send log to Sentry here as well?
+            setErrorCode("InternalErrorException");
+        }
+    }, []);
 
+    const federatedSignInHandler = useCallback(async () => {
+
+        try {
+            // signInWithRedirect({ provider: "Google" });
+            const baseUrl = process.env.NEXT_PUBLIC_BASE_APP_URL;
+            const successRedirect = new URL(baseUrl + "/dashboard");
+            const errorRedirect = new URL(baseUrl + "/login?err_code=smth-went-wrong");
+            
+            const success = setThirdPartyAuthorizeRedirectData(
+                successRedirect,
+                errorRedirect,
+                "GOOGLE",
+            );
+
+            if (!success)
+				throw new Error("Failed to set third party authorize redirect data!");
+            
+            const redirectUri = new URL('/third-party-authorize', baseUrl).toString();
+            
+            buildIdpSignInUrl({
+                provider: "Google",
+                redirectUri: redirectUri,
+            }, onCognitoIdpSignInBuildResult);
         } catch (error) {
             return getErrorMessage(error);
         }
-    }, []);
+    }, [onCognitoIdpSignInBuildResult]);
 
     return (
         <main className={styles.main}>
@@ -85,7 +113,7 @@ export function LoginView() {
                 <div className={styles.content}>
                     <div className={styles["left-content"]}>
                         <div className={styles["left-content-img-wrapper"]}>
-                            <Image className={styles["background-image"]} src={cnTowerImg} alt="Image of CN Tower, Toronto" />
+                            <Image className={styles["background-image"]} src={cnTowerImg} alt="Image of CN Tower, Toronto" priority={true} />
                         </div>
 
                         <div className={styles["left-content-text-overlay"]}>
