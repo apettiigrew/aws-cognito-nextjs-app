@@ -1,10 +1,10 @@
 "use client";
 
 import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/banner/message-banner";
-import { AWSInitiateAuthError } from "@/lib/auth/cognito-api";
+import { CognitoAPI, setThirdPartyAuthorizeRedirectData } from "@/lib/auth/cognito-api";
 import { getErrorMessage } from "@/lib/get-error-message";
 import cnTowerImg from "@img/cn-tower.jpg";
-import { resendSignUpCode, signIn, signInWithRedirect } from "aws-amplify/auth";
+import { resendSignUpCode, signIn } from "aws-amplify/auth";
 import { Form, Formik, FormikValues } from "formik";
 import Image from "next/image";
 import Link from "next/link";
@@ -16,7 +16,7 @@ import { AppButton, AppButtonVariation } from "../../shared/layout/buttons";
 import { InputField } from "../../shared/layout/input-field";
 import { Heading, SubHeading } from "../../text/subheading";
 import styles from "./login-view.module.scss";
-import { buildIdpSignInUrl, CognitoIdpSignInUrlBuildResult, setThirdPartyAuthorizeRedirectData, sha256 } from "@/lib/auth/amplify-cognito-config";
+import { AWSInitiateAuthError, CognitoIdpSignInUrlBuildResult } from "@/lib/auth/cognito-api-types";
 
 interface FormValues {
     email: string;
@@ -69,12 +69,9 @@ export function LoginView() {
     }, []);
 
     const onCognitoIdpSignInBuildResult = useCallback((result: CognitoIdpSignInUrlBuildResult) => {
-        // console.log("Cognito idp build result:", result);
         if (result.success) {
-            // Redirect user to identity provider sign in
             window.location.assign(result.url);
         } else {
-            // Potentially send log to Sentry here as well?
             setErrorCode("InternalErrorException");
         }
     }, []);
@@ -82,11 +79,23 @@ export function LoginView() {
     const federatedSignInHandler = useCallback(async () => {
 
         try {
-            // signInWithRedirect({ provider: "Google" });
+            /**
+             * This is a more straightfoward way to sign in with Google.
+             * In order to get user information that was signed invovled listen in to 
+             * signInWithRedirect event in the Hub. 
+             * 
+             * There is ongoing bug apparently with the signInWithRedirect event not firing.
+             * https://github.com/aws-amplify/amplify-js/issues/13436
+             * 
+             * So I have opted for a different approach until the issue has been resolved.
+             * 
+             */
+            /** signInWithRedirect({ provider: "Google" }); */
+
             const baseUrl = process.env.NEXT_PUBLIC_BASE_APP_URL;
             const successRedirect = new URL(baseUrl + "/dashboard");
-            const errorRedirect = new URL(baseUrl + "/login?err_code=smth-went-wrong");
-            
+            const errorRedirect = new URL(baseUrl + "/login?err_code=something-went-wrong");
+
             const success = setThirdPartyAuthorizeRedirectData(
                 successRedirect,
                 errorRedirect,
@@ -94,14 +103,15 @@ export function LoginView() {
             );
 
             if (!success)
-				throw new Error("Failed to set third party authorize redirect data!");
-            
+                throw new Error("Failed to set third party authorize redirect data!");
+
             const redirectUri = new URL('/third-party-authorize/', baseUrl).toString();
-            
-            buildIdpSignInUrl({
+
+            CognitoAPI.buildIdpSignInUrl({
                 provider: "Google",
                 redirectUri: redirectUri,
             }, onCognitoIdpSignInBuildResult);
+
         } catch (error) {
             return getErrorMessage(error);
         }

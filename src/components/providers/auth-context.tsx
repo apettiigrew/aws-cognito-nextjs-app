@@ -70,12 +70,14 @@ export function AuthContextProvicer(props: AuthContextProviderProps) {
             // const responseUser = await currentAuthenticatedUser()
             const responseUser = await getCurrentUser()
             setUser(responseUser)
-            // setProgressCircle(false)
         } catch (error) {
             setUser(null)
-            // setProgressCircle(false)
         }
     }
+
+    const isFederatedSignIn = useCallback(async () => {
+
+    }, [])
 
     return (
         <AuthInfoContext.Provider value={{

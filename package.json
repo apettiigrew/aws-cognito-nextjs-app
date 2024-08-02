@@ -9,12 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@aws-amplify/adapter-nextjs": "^1.0.27",
+    "@aws-amplify/adapter-nextjs": "^1.2.10",
     "@types/react-select": "^5.0.1",
+    "amazon-cognito-identity-js": "^6.3.12",
     "aws-amplify": "^6.4.1",
-    "amazon-cognito-identity-js": "^6.3.1",
+    "aws-jwt-verify": "^4.0.1",
     "formik": "^2.4.6",
     "i": "^0.3.7",
+    "install": "^0.13.0",
     "next": "14.2.4",
     "npm": "^10.8.2",
     "react": "^18",
@@ -23,6 +25,7 @@
     "react-select": "^5.8.0",
     "react-toastify": "^10.0.5",
     "reset-css": "^5.0.2",
+    "universal-cookie": "^7.2.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {

@@ -1,4 +1,118 @@
 
+import { ChallengeName, CodeDeliveryDetails, CognitoUser, CognitoUserAttribute, CognitoUserSession, ICognitoUserAttributeData, UserData } from "amazon-cognito-identity-js";
+
+
+// For more info on attributes -> https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-attributes.html
+
+/** Index and search your users based on the sub attribute. The sub attribute is a unique user identifier within each user pool. Users can change attributes like username and email. The sub attribute has a fixed value. For more information about finding users, see Managing and searching for user accounts. */
+export type COGNITO_USER_ATTRIBUTE_SUB = "sub";
+/** Given name(s) or first name(s) of the user */
+export type COGNITO_USER_ATTRIBUTE_GIVEN_NAME = "given_name";
+/** Middle name(s) of the user */
+export type COGNITO_USER_ATTRIBUTE_MIDDLE_NAME = "middle_name";
+/** Surname(s) or last name(s) of the user */
+export type COGNITO_USER_ATTRIBUTE_FAMILY_NAME = "family_name";
+/** Casual name of the user that may or may not be the same as the given_name */
+export type COGNITO_USER_ATTRIBUTE_NICK_NAME = "nickname";
+/** URL of the user's profile picture. URL ideally refers to an image file. */
+export type COGNITO_USER_ATTRIBUTE_PICTURE = "picture";
+/** Shorthand name by which the user wishes to be referenced to. */
+export type COGNITO_USER_ATTRIBUTE_PREFERRED_USERNAME = "preferred_username";
+/** URL of the user's profile page. */
+export type COGNITO_USER_ATTRIBUTE_PROFILE = "profile";
+/** Users and administrators can verify email address values. An administrator with proper AWS account permissions can change the user's email address and also mark it as verified. Mark an email address as verified with the AdminUpdateUserAttributes API or the admin-update-user-attributes AWS Command Line Interface (AWS CLI) command. With this command, the administrator can change the email_verified attribute to true. You can also edit a user in the Users tab of the AWS Management Console to mark an email address as verified. */
+export type COGNITO_USER_ATTRIBUTE_EMAIL = "email";
+/** Holds whether the user's email is verified */
+export type COGNITO_USER_ATTRIBUTE_EMAIL_VERIFIED = "email_verified";
+/** The user's gender */
+export type COGNITO_USER_ATTRIBUTE_GENDER = "gender";
+/** User's birthday, represented as an ISO 8601:2004 [ISO8601-2004] YYYY-MM-DD format. */
+export type COGNITO_USER_ATTRIBUTE_BIRTH_DATE = "birthdate";
+/** String from zoneinfo time zone database for the user's timezone, i.e, Europe/Paris  */
+export type COGNITO_USER_ATTRIBUTE_ZONE_INFO = "zoneinfo";
+/** User's locale, represented as a BCP47 language tag. */
+export type COGNITO_USER_ATTRIBUTE_LOCALE = "locale";
+/** Time the user's information was last updated, UTC timestamp */
+export type COGNITO_USER_ATTRIBUTE_UPDATED_AT = "updated_at";
+/** User's preferred postal address */
+export type COGNITO_USER_ATTRIBUTE_ADDRESS = "address";
+/** URL of the user's Web page or blog. */
+export type COGNITO_USER_ATTRIBUTE_WEBSITE = "website";
+/** A json array holding specific details of a federated idp (identity provider)  */
+export type COGNITO_USER_ATTRIBUTE_IDENTITIES = "identities";
+/** Users phone number */
+export type COGNITO_USER_ATTRIBUTE_PHONE_NUMBER = "phone_number";
+/** True of false */
+export type COGNITO_USER_ATTRIBUTE_PHONE_NUMBER_VERIFIED = "phone_number_verified";
+/** Holds status of the user. E.g. "CONFIRMED" or "EXTERNAL_PROVIDER" */
+export type COGNITO_USER_ATTRIBUTE_USER_STATUS = "cognito:user_status";
+
+/** Union type of all standard AWS cognito user attributes */
+export type COGNITO_STANDARD_ATTRIBUTES =
+    COGNITO_USER_ATTRIBUTE_SUB |
+    COGNITO_USER_ATTRIBUTE_GIVEN_NAME |
+    COGNITO_USER_ATTRIBUTE_MIDDLE_NAME |
+    COGNITO_USER_ATTRIBUTE_FAMILY_NAME |
+    COGNITO_USER_ATTRIBUTE_NICK_NAME |
+    COGNITO_USER_ATTRIBUTE_PICTURE |
+    COGNITO_USER_ATTRIBUTE_PREFERRED_USERNAME |
+    COGNITO_USER_ATTRIBUTE_PROFILE |
+    COGNITO_USER_ATTRIBUTE_EMAIL |
+    COGNITO_USER_ATTRIBUTE_EMAIL_VERIFIED |
+    COGNITO_USER_ATTRIBUTE_BIRTH_DATE |
+    COGNITO_USER_ATTRIBUTE_ZONE_INFO |
+    COGNITO_USER_ATTRIBUTE_LOCALE |
+    COGNITO_USER_ATTRIBUTE_UPDATED_AT |
+    COGNITO_USER_ATTRIBUTE_ADDRESS |
+    COGNITO_USER_ATTRIBUTE_WEBSITE |
+    COGNITO_USER_ATTRIBUTE_IDENTITIES |
+    COGNITO_USER_ATTRIBUTE_PHONE_NUMBER |
+    COGNITO_USER_ATTRIBUTE_PHONE_NUMBER_VERIFIED |
+    COGNITO_USER_ATTRIBUTE_GENDER;
+
+
+/** 
+ * Response body request to hosted ui /oauth2/userInfo endpoint
+* @read https://docs.aws.amazon.com/cognito/latest/developerguide/userinfo-endpoint.html#get-userinfo-response-sample
+*/
+type CognitoIdpUserInfoSuccessResponse = Record<COGNITO_STANDARD_OR_CUSTOM_ATTRIBUTES, string>;
+
+/** See "identity_provider" request param of https://docs.aws.amazon.com/cognito/latest/developerguide/authorization-endpoint.html#get-authorize-request-parameters */
+export type COGNITO_IDENTITY_PROVIDERS = "Facebook" | "Google" | "LoginWithAmazon" | "SignInWithApple" | "COGNITO";
+
+/** Global cognito user state object */
+export type CognitoUserState = {
+    /** Keeps track of whether the init() function has ran */
+    initialized: boolean,
+    /** Is the current logged in user a federated user? */
+    isFederatedUser: boolean | null,
+    /** Cognito User class instance. Used by the API to execute actions against + retrieve/store user data. */
+    user: CognitoUserExtended | null,
+    /** The current User session in the browser */
+    userSession: CognitoUserSession | null,
+    /** AWS Cognito User Data Copied from {@link UserData}
+     *
+     * @see https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_GetUser.html#API_GetUser_ResponseSyntax
+    */
+    userData: CognitoUserData,
+}
+
+/** https://docs.aws.amazon.com/cognito/latest/developerguide/token-endpoint.html#post-token-positive-exchanging-authorization-code-for-tokens */
+export type CognitoAuthorizeCodeForTokenSuccessResponse = {
+    access_token: string,
+    id_token: string,
+    refresh_token: string,
+    /** How to usen token in subsequent requests */
+    token_type: "Bearer",
+    /** Time till expiration in seconds. Example 3600 for 1 hour. */
+    expires_in: 3600,
+}
+
+
+export class CognitoUserExtended extends CognitoUser {
+    userDataKey: string;
+}
+
 /** https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_InitiateAuth.html#API_InitiateAuth_Errors */
 type AWSCognitoInitiateAuthErrorCodes =
     "ForbiddenException" |
@@ -133,6 +247,17 @@ export type CognitoAuthorizeCodeForTokenErrorResponse = {
     error: "invalid_request" | "invalid_client" | "invalid_grant" | "unauthorized_client" | "unsupported_grant_type" | "unknown_error_type";
 }
 
+/** 
+ * Unsuccessful response for request to hosted ui /oauth2/userInfo endpoint
+ * @read https://docs.aws.amazon.com/cognito/latest/developerguide/userinfo-endpoint.html#get-userinfo-negative
+ */
+export type CognitoIdpUserInfoErrorResponse = {
+    /** Unique error code */
+    error: "invalid_request" | "invalid_token" | string,
+    /** Elaborated error description. E.g. "No authorization header set" */
+    error_description: string,
+}
+
 
 /** Idp Token echange response */
 export type CognitoIdpTokenExchangeResponse = CognitoIdpTokenExchangeSuccess | CognitoIdpTokenExchangeError;
@@ -170,8 +295,32 @@ export type AWSInitiateAuthError = AWSCognitoError<AWSCognitoInitiateAuthErrorCo
 export type AWSCognitoCommonError = AWSCognitoConfirmForgotPasswordErrorCodes | AWSCognitoInitiateAuthErrorCodes | AWSCognitoCommonErrorCodes;
 
 type GetUserInfoArgs = {
-	/** Valid access token. E.g. one that you received by calling /oauth2/token hosted ui endpoint */
-	accessToken: string,
-	/** The AWS Cognito hosted ui domain. Either a AWS generated domain (https://xxxxxxxxxx.eu-central-1.amazoncognito.com) or a custom domain name by us. */
-	hostedUIBaseUrl: string,
+    /** Valid access token. E.g. one that you received by calling /oauth2/token hosted ui endpoint */
+    accessToken: string,
+    /** The AWS Cognito hosted ui domain. Either a AWS generated domain (https://xxxxxxxxxx.eu-central-1.amazoncognito.com) or a custom domain name by us. */
+    hostedUIBaseUrl: string,
 };
+
+export type BuildIdpSignInUrlArgs = {
+    /** E.g. "Google" */
+    provider: COGNITO_IDENTITY_PROVIDERS,
+    /** The uri to redirect the user to after sign in (successful or not) */
+    redirectUri: string,
+    /** Scopes you expect the final token to have. Read more here: https://docs.aws.amazon.com/cognito/latest/developerguide/authorization-endpoint.html#get-authorize-request-parameters */
+    scopes?: string[],
+}
+
+export type CognitoIdpSignInUrlBuildSuccess = {
+    /** Was the build successful? */
+    readonly success: true,
+    /** Sign in url to redirect to */
+    readonly url: string,
+}
+
+export type CognitoIdpSignInUrlBuildFailed = {
+    /** Was the build successful? */
+    success: false,
+    /** Error message string */
+    readonly message: string,
+}
+export type CognitoIdpSignInUrlBuildResult = CognitoIdpSignInUrlBuildSuccess | CognitoIdpSignInUrlBuildFailed;

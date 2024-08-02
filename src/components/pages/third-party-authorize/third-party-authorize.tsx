@@ -2,13 +2,13 @@
 
 import { getQueryRecordFromUrl } from "@/hooks/use-window-query";
 import { AppEnvironments } from "@/lib/app-environments";
-import { clearThirdPartyAuthorizeRedirectData, CognitoAuthorizeCodeForTokenSuccessResponse, getThirdPartyAuthorizeRedirectData, idpGetUserInfo, idpSignInUser, requestIdpOauthToken, SocialIdentityProviderCodes } from "@/lib/auth/amplify-cognito-config";
-import { CognitoIdpTokenExchangeResponse, CognitoIdpUserInfoResponse } from "@/lib/auth/cognito-api";
+import { clearThirdPartyAuthorizeRedirectData, CognitoAPI, getThirdPartyAuthorizeRedirectData } from "@/lib/auth/cognito-api";
+import { CognitoAuthorizeCodeForTokenSuccessResponse, CognitoIdpTokenExchangeResponse, CognitoIdpUserInfoResponse } from "@/lib/auth/cognito-api-types";
+import { SocialIdentityProviderCodes } from "@/lib/auth/social-identity";
 import { getSessionStorageValue } from "@/lib/utils/storage-utils";
 import { isValidUrl } from "@/lib/utils/url-utils";
 import { CognitoAccessToken, CognitoIdToken, CognitoRefreshToken, ICognitoUserSessionData } from "amazon-cognito-identity-js";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-// import { cookies } from "next/headers";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
@@ -20,12 +20,11 @@ type PageQuery = {
 export function ThirdPartyAuthorizePage() {
     const router = useRouter();
 
-    // if (typeof window === "undefined")
-    //     throw new Error("This component should never be server-rendered!");
-
     useEffect(() => {
-        const handler = new ThirdPartyAuthorizationHandler({ router: router });
-        handler.handle();
+        if (typeof window !== "undefined") {
+            const handler = new ThirdPartyAuthorizationHandler({ router: router });
+            handler.handle();
+        }
     }, [router]);
 
     return null;
@@ -34,9 +33,6 @@ export function ThirdPartyAuthorizePage() {
 type ConstructorArgs = {
     router: AppRouterInstance,
 }
-
-/** aptprd = Third Party Redirect Data */
-export const thirdPartyAuthorizeDataStorageKey = "aptprd";
 
 export type ThirdPartyAuthorizeRedirectData = {
     successRedirectUrl: string,
@@ -75,26 +71,10 @@ class ThirdPartyAuthorizationHandler {
     }
 
     async handle() {
-        
+
         const windowQuery = getQueryRecordFromUrl<PageQuery>();
 
-        // First check our base url is actually set...
-        if (!isValidUrl(process.env.NEXT_PUBLIC_BASE_APP_URL)) {
-            console.error("Invalid NEXT_PUBLIC_APP_BASEURL in env! Please make sure it is valid.");
-            this.errorRedirect();
-            return;
-        }
 
-        if (typeof process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID !== "string") {
-            console.error("Invalid NEXT_PUBLIC_COGNITO_APP_CLIENT_ID in env! Please make sure it is valid.");
-            this.errorRedirect();
-        }
-
-        if (typeof process.env.NEXT_PUBLIC_OAUTH_DOMAIN_H !== "string") {
-            console.error("Invalid NEXT_PUBLIC_COGNITO_HOSTED_UI_BASE_URL in env! Please make sure it is valid.");
-            this.errorRedirect();
-        }
-        
         // Get code from search params
         const code = windowQuery.code;
         if (typeof code !== "string") {
@@ -110,13 +90,7 @@ class ThirdPartyAuthorizationHandler {
             this.errorRedirect();
             return;
         }
-        // const requestBody = new URLSearchParams({
-        //     grant_type: 'authorization_code',
-        //     client_id: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID as string,
-        //     code: code,
-        //     redirect_uri: `${origin}/api/auth/callback`
-        // })
-
+      
         // Has to be exact same that was sent to the authorize request!
         const redirectUri = `${process.env.NEXT_PUBLIC_BASE_APP_URL}/third-party-authorize/`;
 
@@ -128,14 +102,14 @@ class ThirdPartyAuthorizationHandler {
             this.errorRedirect();
             return;
         }
-        console.log("Code verifier:", codeVerifier);   
+        console.log("Code verifier:", codeVerifier);
         console.log("Code:", code);
         console.log("Redirect URI:", redirectUri);
         console.log("Client ID:", process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
         console.log("Hosted UI Base URL:", process.env.NEXT_PUBLIC_OAUTH_DOMAIN_H);
 
         // Send the actual request
-        requestIdpOauthToken({
+        CognitoAPI.requestIdpOauthToken({
             hostedUIBaseUrl: `${process.env.NEXT_PUBLIC_OAUTH_DOMAIN_H}`,
             clientId: `${process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID}`,
             redirectUri: redirectUri,
@@ -145,7 +119,6 @@ class ThirdPartyAuthorizationHandler {
     }
 
     private successRedirect() {
-        // window.location.replace(this._redirectData.successRedirectUrl);
         this._router.replace(this._redirectData.successRedirectUrl);
     }
 
@@ -171,7 +144,7 @@ class ThirdPartyAuthorizationHandler {
             };
 
             // Set current browser sign in session with received data
-            idpSignInUser(
+            CognitoAPI.idpSignInUser(
                 userName,
                 sessionData,
                 response,
@@ -183,10 +156,10 @@ class ThirdPartyAuthorizationHandler {
     }
 
     private onIdpTokenExchangeResponse(res: CognitoIdpTokenExchangeResponse) {
-        console.log(res);
+        
         if (res.success) {
             this._tokenSuccessData = res.responseData;
-            idpGetUserInfo({
+            CognitoAPI.idpGetUserInfo({
                 accessToken: res.responseData.access_token,
                 hostedUIBaseUrl: `${process.env.NEXT_PUBLIC_OAUTH_DOMAIN_H}`,
             }, this.onGetUserInfo);
