@@ -11,7 +11,7 @@ export function useStoicQuote() {
                 setLoading(true);
                 const response = await fetch("https://stoic-quotes.com/api/quote");
                 const data = await response.json();
-                console.log(data);
+                // console.log(data);
                 setData(data);
             } catch (error: unknown) {
                 setError("Error fetching Stoic quote");

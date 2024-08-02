@@ -1,3 +1,5 @@
+"use client";
+
 import { AppEnvironments } from "@/lib/app-environments";
 import { CognitoAPI } from "@/lib/auth/cognito-api";
 import { setUserAccessTokenCookie } from "@/lib/cookies/cookie-utils";

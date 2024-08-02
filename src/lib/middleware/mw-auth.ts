@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { AppEnvironments } from "../app-environments";
 import { COOKIE_USER_AUTH_TOKEN } from "../cookies/cookie-constants";
 import { CognitoJwtVerifier } from "aws-jwt-verify";
+import { CognitoJWTHeader, CognitoJWTPayload } from "../auth/cognito-api-types";
 
 /** Single AWS Congito JWK (JSON Web Key) object. Aka, public key data used to verify the incoming JWT (JSON Web Token) */
 type JWK = {
@@ -45,7 +46,7 @@ export async function authenticateAccountRouteRequest(request: NextRequest): Pro
 
 	try {
 		const payload = await verifier.verify(accessTokenCookieValue.value);
-		console.log("Token is valid. Payload:", payload);
+		// console.log("Token is valid. Payload:");
 	} catch {
 		console.error("Token is invalid. Redirecting to sign in page.");
 		return buildRedirectToSignInResponse(request);

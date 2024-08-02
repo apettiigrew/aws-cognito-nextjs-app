@@ -8,7 +8,7 @@ import { useContext, useEffect } from 'react';
 export default function DashboardPage() {
     const router = useRouter();
     const authContext = useContext(AuthInfoContext);
-    console.log(authContext.user);
+    // console.log(authContext.user);
     useEffect(() => {
 
         async function handleFetchUserAttributes() {
@@ -17,10 +17,10 @@ export default function DashboardPage() {
                 const userAttributes = await fetchUserAttributes();
                 const user = await getCurrentUser();
                 const authSession = await fetchAuthSession()
-                console.log(userAttributes);
+                // console.log(userAttributes);
                 // console.log(`userAttributes: ${JSON.parse(userAttributes)}`);
-                console.log(`dashboard: ${user}`);
-                console.log(`authSession: ${authSession}`);
+                // console.log(`dashboard: ${user}`);
+                // console.log(`authSession: ${authSession}`);
             } catch (error) {
                 console.log(error);
             }
@@ -32,7 +32,7 @@ export default function DashboardPage() {
 
 
     function handleLogout() {
-        console.log("logout button clicked");
+        // console.log("logout button clicked");
         signOut().then(() => {
             router.push('/login');
         }

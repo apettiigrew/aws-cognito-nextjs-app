@@ -41,10 +41,10 @@ export function AuthContextProvicer(props: AuthContextProviderProps) {
 
     useEffect(() => {
         Hub.listen('auth', ({ payload: { event } }) => {
-            console.log("hub event", event)
+            // console.log("hub event", event)
             switch (event) {
                 case "signInWithRedirect":
-                    console.log("signInWithRedirect event")
+                    // console.log("signInWithRedirect event")
                     checkUser()
                     break
                 case "signedOut":

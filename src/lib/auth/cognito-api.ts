@@ -250,6 +250,7 @@ export class CognitoAPI {
 			return;
 		}
 
+		// console.log("Cognito is now intializing");
 		hostedUIBaseUrl = config.hostedUIBaseUrl;
 		debuggingEnabled = config.enableDebugging === true || false;
 		enabledIdentityProviders = Array.isArray(config.enabledIdentityProviders) ? config.enabledIdentityProviders : [];
@@ -294,7 +295,7 @@ export class CognitoAPI {
 					state.initialized = true;
 					updateState();
 				} else {
-					console.log("on Get User Info response:", res);
+					// console.log("on Get User Info response:", res);
 
 					// Convert response object to attributes
 					// https://docs.aws.amazon.com/cognito/latest/developerguide/userinfo-endpoint.html#get-userinfo-response-sample
@@ -315,7 +316,7 @@ export class CognitoAPI {
 						Username: savedUser?.getUsername() || "",
 					};
 
-					console.log("newUserData:", newUserdata);
+					// console.log("newUserData:", newUserdata);
 
 					updateStateUserData(newUserdata);
 					state.initialized = true;
@@ -327,8 +328,8 @@ export class CognitoAPI {
 				state.userSession = session;
 				const valid = session.isValid();
 
-				console.log("Loaded existing user session:", session);
-				console.log("Existing session is valid:", valid);
+				// console.log("Loaded existing user session:", session);
+				// console.log("Existing session is valid:", valid);
 
 				// If existing user (session) is valid -> fetch user data
 				if (state.user !== null && session.isValid()) {
@@ -336,7 +337,7 @@ export class CognitoAPI {
 					fireAccessTokenUpdatedEvent(session.getAccessToken());
 					// Check if user is federated
 					state.isFederatedUser = checkIfFederatedUser(session.getIdToken());
-					console.log("Is federated user:", state.isFederatedUser);
+					// console.log("Is federated user:", state.isFederatedUser);
 
 					if (!state.isFederatedUser) {
 						state.user.getUserData(onGetUserData as NodeCallback<Error, UserData>);
@@ -359,6 +360,7 @@ export class CognitoAPI {
 			}
 
 		});
+		// console.log("Cognito is completed initilization");
 	}
 
 	/**
@@ -407,6 +409,9 @@ export class CognitoAPI {
 	 * @read https://docs.aws.amazon.com/cognito/latest/developerguide/federation-endpoints.html
 	 */
 	static idpSignInUser(userName: string, sessionData: ICognitoUserSessionData, userInfo: Record<string, any>) {
+		// console.log("idpSignInUser:", userName);
+		// console.log("userPool:", userPool);
+
 		const user = new CognitoUser({ Username: userName, Pool: userPool }) as CognitoUserExtended;
 		state.user = user;
 		state.isFederatedUser = true;

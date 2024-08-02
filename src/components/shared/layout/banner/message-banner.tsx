@@ -1,4 +1,5 @@
-import { AWSCognitoCommonError } from "@/lib/auth/cognito-api";
+
+import { AWSCognitoCommonError } from "@/lib/auth/cognito-api-types";
 import { WarningIcon } from "../../icons/icons";
 import styles from "./message-banner.module.scss";
 
@@ -12,7 +13,7 @@ interface ErrorMessageBannerProps {
 export function MessageBanner(props: ErrorMessageBannerProps) {
     const { errorCode } = props;
     let message = "";
-    console.log(errorCode);
+    // console.log(errorCode);
     if (errorCode === null || errorCode === undefined) {
         return null;
     }

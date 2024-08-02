@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     authorizeParams.append('identity_provider', 'Google')
     authorizeParams.append('scope', 'phone email openid aws.cognito.signin.user.admin')
 
-    console.log("running routes");
+    // console.log("running routes");
     // return NextResponse.redirect(new URL('/signup', request.url))
     const baseUrl = `https://${NEXT_PUBLIC_OAUTH_DOMAIN}`;
     return NextResponse.redirect(new URL(`/oauth2/authorize?${authorizeParams.toString()}`, baseUrl))

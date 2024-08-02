@@ -97,6 +97,17 @@ export type CognitoUserState = {
     userData: CognitoUserData,
 }
 
+/** Union type of Cognito access- an id token payload models */
+export type CognitoJWTPayload = CognitoAccessTokenPayload | CognitoIdTokenPayload;
+
+/** Header of a Cognito JWT */
+export type CognitoJWTHeader = {
+	/** The JWT unique key id */
+	kid: string,
+	/** Algorithm used to sign the signature with. E.g. "RS256" */
+	alg: string,
+}
+
 /** https://docs.aws.amazon.com/cognito/latest/developerguide/token-endpoint.html#post-token-positive-exchanging-authorization-code-for-tokens */
 export type CognitoAuthorizeCodeForTokenSuccessResponse = {
     access_token: string,

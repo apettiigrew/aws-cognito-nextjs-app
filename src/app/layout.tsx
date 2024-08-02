@@ -11,6 +11,7 @@ import CheckForValidConfigurationValues from "@/components/providers/config-chec
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode }>) {
+  
   return (
     <CheckForValidConfigurationValues>
       <html lang="en">

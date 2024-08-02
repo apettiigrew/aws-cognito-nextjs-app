@@ -9,7 +9,7 @@ export function useWindowQuery<T extends QueryRecord>(): T {
 
 	useEffect(() => {
 		function callback(newQueryParams: QueryRecord) {
-			console.log("Setting new query params");
+			// console.log("Setting new query params");
 			setRecord(newQueryParams as T);
 		}
 

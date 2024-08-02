@@ -47,7 +47,7 @@ export function LoginView() {
                 password: String(values.password),
             });
 
-            console.log(isSignedIn, nextStep);
+            // console.log(isSignedIn, nextStep);
             if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
                 await resendSignUpCode({
                     username: String(values.email),
