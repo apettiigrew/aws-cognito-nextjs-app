@@ -96,7 +96,7 @@ export function LoginView() {
             if (!success)
 				throw new Error("Failed to set third party authorize redirect data!");
             
-            const redirectUri = new URL('/third-party-authorize', baseUrl).toString();
+            const redirectUri = new URL('/third-party-authorize/', baseUrl).toString();
             
             buildIdpSignInUrl({
                 provider: "Google",

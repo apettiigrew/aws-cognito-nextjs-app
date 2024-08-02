@@ -1,11 +1,11 @@
 "use client";
 
-import { Amplify, type ResourcesConfig } from "aws-amplify";
-import { AuhtorizeUrlBuildArguments, CognitoAuthorizeCodeForTokenErrorResponse, CognitoIdpTokenExchangeParams, CognitoIdpTokenExchangeResponse, CognitoIdpUserInfoResponse, GetUserInfoArgs } from "./cognito-api";
-import { getLocalStorageValue, removeLocalStorageValue, setLocalStorageValue, setSessionStorageValue } from "../utils/storage-utils";
-import { CognitoUser, CognitoUserSession, ICognitoUserAttributeData, ICognitoUserSessionData, UserData } from "amazon-cognito-identity-js";
 import { ThirdPartyAuthorizeRedirectData } from "@/components/pages/third-party-authorize/third-party-authorize";
+import { ICognitoUserSessionData } from "amazon-cognito-identity-js";
+import { Amplify, type ResourcesConfig } from "aws-amplify";
+import { getLocalStorageValue, removeLocalStorageValue, setLocalStorageValue, setSessionStorageValue } from "../utils/storage-utils";
 import { isValidUrl } from "../utils/url-utils";
+import { AuhtorizeUrlBuildArguments, CognitoAuthorizeCodeForTokenErrorResponse, CognitoIdpTokenExchangeParams, CognitoIdpTokenExchangeResponse, CognitoIdpUserInfoResponse, GetUserInfoArgs } from "./cognito-api";
 
 /** Allowed Social Identity Provider codes in Park API V1 */
 export type SocialIdentityProviderCodes = "GOOGLE";
@@ -228,7 +228,7 @@ export async function idpGetUserInfo(args: GetUserInfoArgs, callback: (response:
    * @read https://docs.aws.amazon.com/cognito/latest/developerguide/token-endpoint.html
    */
 export async function requestIdpOauthToken(args: CognitoIdpTokenExchangeParams, callback: (res: CognitoIdpTokenExchangeResponse) => void) {
-  const url = args.hostedUIBaseUrl + "/oauth2/token";
+  const url = args.hostedUIBaseUrl + "/oauth2/token/";
 
   const body: Record<string, string> = {};
   body["grant_type"] = "authorization_code";
@@ -253,7 +253,8 @@ export async function requestIdpOauthToken(args: CognitoIdpTokenExchangeParams, 
   const formBody = bodyparts.join("&");
 
   let response: Response;
-
+  console.log("url: ", url);
+  console.log("formBody: ", formBody);
   fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -263,6 +264,7 @@ export async function requestIdpOauthToken(args: CognitoIdpTokenExchangeParams, 
     return res.json();
   }).then(resBody => {
     if (response.status !== 200) {
+      console.log("Then: Error during fetch request:", resBody);
       callback({
         success: false,
         responseData: resBody as CognitoAuthorizeCodeForTokenErrorResponse,
@@ -274,6 +276,7 @@ export async function requestIdpOauthToken(args: CognitoIdpTokenExchangeParams, 
       });
     }
   }).catch(reason => {
+    console.log("Catch: Error during fetch request:", reason);
     callback({
       success: false,
       responseData: { error: "unknown_error_type" },
