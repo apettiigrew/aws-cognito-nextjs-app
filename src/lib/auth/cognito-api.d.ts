@@ -168,3 +168,10 @@ type CognitoIdpTokenExchangeParams = {
 export type AWSInitiateAuthError = AWSCognitoError<AWSCognitoInitiateAuthErrorCodes | AWSCognitoCommonErrorCodes>;
 export type AWSInitiateAuthError = AWSCognitoError<AWSCognitoInitiateAuthErrorCodes | AWSCognitoCommonErrorCodes>;
 export type AWSCognitoCommonError = AWSCognitoConfirmForgotPasswordErrorCodes | AWSCognitoInitiateAuthErrorCodes | AWSCognitoCommonErrorCodes;
+
+type GetUserInfoArgs = {
+	/** Valid access token. E.g. one that you received by calling /oauth2/token hosted ui endpoint */
+	accessToken: string,
+	/** The AWS Cognito hosted ui domain. Either a AWS generated domain (https://xxxxxxxxxx.eu-central-1.amazoncognito.com) or a custom domain name by us. */
+	hostedUIBaseUrl: string,
+};

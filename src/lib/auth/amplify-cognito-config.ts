@@ -1,10 +1,11 @@
 "use client";
 
 import { Amplify, type ResourcesConfig } from "aws-amplify";
-import { AuhtorizeUrlBuildArguments, CognitoAuthorizeCodeForTokenErrorResponse, CognitoIdpTokenExchangeParams, CognitoIdpTokenExchangeResponse } from "./cognito-api";
-import { getLocalStorageValue, removeLocalStorageValue, setLocalStorageValue } from "../utils/storage-utils";
+import { AuhtorizeUrlBuildArguments, CognitoAuthorizeCodeForTokenErrorResponse, CognitoIdpTokenExchangeParams, CognitoIdpTokenExchangeResponse, CognitoIdpUserInfoResponse, GetUserInfoArgs } from "./cognito-api";
+import { getLocalStorageValue, removeLocalStorageValue, setLocalStorageValue, setSessionStorageValue } from "../utils/storage-utils";
 import { CognitoUser, CognitoUserSession, ICognitoUserAttributeData, ICognitoUserSessionData, UserData } from "amazon-cognito-identity-js";
 import { ThirdPartyAuthorizeRedirectData } from "@/components/pages/third-party-authorize/third-party-authorize";
+import { isValidUrl } from "../utils/url-utils";
 
 /** Allowed Social Identity Provider codes in Park API V1 */
 export type SocialIdentityProviderCodes = "GOOGLE";
@@ -155,6 +156,9 @@ export async function buildIdpSignInUrl(args: BuildIdpSignInUrlArgs, callback: (
   const nonce = await generateNonce();
   const codeVerifier = await generateNonce();
 
+  // Store unique value in session storage
+  setSessionStorageValue(`codeVerifier-${nonce}`, codeVerifier);
+
   // Encrypt the verifier (AWS expects this to be SHA256)
   const hash = await sha256(codeVerifier);
 
@@ -171,8 +175,48 @@ export async function buildIdpSignInUrl(args: BuildIdpSignInUrlArgs, callback: (
     code_challenge: base64Encoded,
     scope: scope.join(" "),
   });
-  
+
   callback({ success: true, url: authorizeUrl });
+}
+
+/**
+   * Request user info from hosted UI /oauth2/userInfo federation endpoint
+   *
+   * @param {GetUserInfoArgs} args Arguments to build request
+   * @param {(resposne: CognitoIdpUserInfoResponse) => void} allback Callback on function result
+   *
+   * @read https://docs.aws.amazon.com/cognito/latest/developerguide/userinfo-endpoint.html
+   */
+export async function idpGetUserInfo(args: GetUserInfoArgs, callback: (response: CognitoIdpUserInfoResponse) => void) {
+
+  if (!isValidUrl(args.hostedUIBaseUrl)) {
+    const message = `idpGetUserInfo error: invalid value for argument hostedUIBaseUrl. Expected url, found: '${args.hostedUIBaseUrl}`;
+
+
+    callback({
+      error: "inavlid_function_arguments",
+      error_description: message,
+    });
+    return;
+  }
+
+  const url = `${args.hostedUIBaseUrl}/oauth2/userInfo`;
+
+  // Execute fetch request
+  fetch(url, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${args.accessToken}` },
+  }).then(res => {
+    return res.json() as Promise<CognitoIdpUserInfoResponse>;
+  }).then(body => {
+    callback(body);
+  }).catch(reason => {
+    const message = `idpGetUserInfo error: Something went wrong during fetch GET request.`;
+    callback({
+      error: "fetch_error",
+      error_description: message,
+    });
+  });
 }
 
 /**
@@ -230,8 +274,6 @@ export async function requestIdpOauthToken(args: CognitoIdpTokenExchangeParams, 
       });
     }
   }).catch(reason => {
-    // TODO: log to sentry instead
-    // logError(`${CognitoAPI.requestIdpOauthToken.name} fetch error. Reason:`, reason);
     callback({
       success: false,
       responseData: { error: "unknown_error_type" },
@@ -326,42 +368,9 @@ function base64EncodeByteArray(buff: ArrayBuffer): string {
 }
 
 
-/** Set sign in user session through session and user data
- * received from a (third party) idp (identity provider).
- *
- * @read https://docs.aws.amazon.com/cognito/latest/developerguide/federation-endpoints.html
-  */
+
 export async function idpSignInUser(userName: string, sessionData: ICognitoUserSessionData, userInfo: Record<string, any>) {
-
-  const user = new CognitoUser({ Username: userName, Pool: userPool }) as CognitoUserExtended;
-  state.user = user;
-  state.isFederatedUser = true;
-
-  const userSession = new CognitoUserSession(sessionData);
-  state.userSession = userSession;
-  user.setSignInUserSession(userSession);
-
-  // Fire Cognito Access Token event
-  fireAccessTokenUpdatedEvent(userSession.getAccessToken());
-
-  logMessage("user data key:", user.userDataKey);
-
-  // Convert response from /oauth2/userInfo to user attributes
-  const entries = Object.entries(userInfo);
-  const attributes: ICognitoUserAttributeData[] = [];
-  for (let i = 0; i < entries.length; i++) {
-    const entry = entries[i];
-    attributes.push({ Name: entry[0], Value: entry[1] });
-  }
-
-  const newUserdata: UserData = {
-    MFAOptions: state.userData.MFAOptions as [],
-    PreferredMfaSetting: state.userData.PreferredMfaSetting as string,
-    UserMFASettingList: state.userData.UserMFASettingList,
-    UserAttributes: attributes,
-    Username: userName,
-  };
-
-  updateStateUserData(newUserdata);
-  updateState();
+  setLocalStorageValue("idp-cognito-username", userName);
+  setLocalStorageValue("idp-cognito-session", JSON.stringify(sessionData));
+  setLocalStorageValue("idp-cognito-user-info", JSON.stringify(userInfo));
 }

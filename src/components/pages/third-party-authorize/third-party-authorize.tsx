@@ -2,8 +2,9 @@
 
 import { getQueryRecordFromUrl } from "@/hooks/use-window-query";
 import { AppEnvironments } from "@/lib/app-environments";
-import { clearThirdPartyAuthorizeRedirectData, CognitoAuthorizeCodeForTokenSuccessResponse, getThirdPartyAuthorizeRedirectData, SocialIdentityProviderCodes } from "@/lib/auth/amplify-cognito-config";
+import { clearThirdPartyAuthorizeRedirectData, CognitoAuthorizeCodeForTokenSuccessResponse, getThirdPartyAuthorizeRedirectData, idpGetUserInfo, idpSignInUser, requestIdpOauthToken, SocialIdentityProviderCodes } from "@/lib/auth/amplify-cognito-config";
 import { CognitoIdpTokenExchangeResponse, CognitoIdpUserInfoResponse } from "@/lib/auth/cognito-api";
+import { getSessionStorageValue } from "@/lib/utils/storage-utils";
 import { isValidUrl } from "@/lib/utils/url-utils";
 import { CognitoAccessToken, CognitoIdToken, CognitoRefreshToken, ICognitoUserSessionData } from "amazon-cognito-identity-js";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
@@ -42,7 +43,6 @@ export type ThirdPartyAuthorizeRedirectData = {
     errorRedirectUrl: string,
     socialIdpCode: SocialIdentityProviderCodes,
 }
-
 
 class ThirdPartyAuthorizationHandler {
     private _router: AppRouterInstance;
@@ -116,23 +116,26 @@ class ThirdPartyAuthorizationHandler {
             redirect_uri: `${origin}/api/auth/callback`
         })
 
-        // Get tokens
-        const res = await fetch(`${process.env.NEXT_PUBLIC_OAUTH_DOMAIN_H}/oauth2/token`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                // 'Authorization': authorizationHeader
-            },
-            body: requestBody
-        })
+        // Has to be exact same that was sent to the authorize request!
+        const redirectUri = `${process.env.NEXT_PUBLIC_APP_BASEURL}/third-party-authorize`;
 
-        const data = await res.json()
-        console.log(data)
+        const codeVerifierKey = `codeVerifier-${state}`;
+        const codeVerifier = getSessionStorageValue(codeVerifierKey);
+        if (codeVerifier === null) {
+            // If code verifier key was not found in session storage
+            // -> invalid redirect -> redirect to error page
+            this.errorRedirect();
+            return;
+        }
 
-        // if (!res.ok) {
-        // 	throw new Error(data.error_description)
-        // }
-
+        // Send the actual request
+        requestIdpOauthToken({
+            hostedUIBaseUrl: `${process.env.NEXT_PUBLIC_OAUTH_DOMAIN_H}`,
+            clientId: `${process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID}`,
+            redirectUri: redirectUri,
+            code: code,
+            codeVerifier: codeVerifier,
+        }, this.onIdpTokenExchangeResponse);
     }
 
     private successRedirect() {
@@ -147,9 +150,6 @@ class ThirdPartyAuthorizationHandler {
     }
 
     private async onGetUserInfo(response: CognitoIdpUserInfoResponse) {
-        // Debugging
-        // console.log("res:", response);
-
         if ("error" in response) {
             this.errorRedirect();
         } else {
@@ -165,11 +165,11 @@ class ThirdPartyAuthorizationHandler {
             };
 
             // Set current browser sign in session with received data
-            // CognitoAPI.idpSignInUser(
-            // 	userName,
-            // 	sessionData,
-            // 	response,
-            // );
+            idpSignInUser(
+                userName,
+                sessionData,
+                response,
+            );
 
             // Redirect to success page
             this.successRedirect();
@@ -177,15 +177,12 @@ class ThirdPartyAuthorizationHandler {
     }
 
     private onIdpTokenExchangeResponse(res: CognitoIdpTokenExchangeResponse) {
-        // Debugging
-        // console.log(res);
-
         if (res.success) {
             this._tokenSuccessData = res.responseData;
-            // CognitoAPI.idpGetUserInfo({
-            // 	accessToken: res.responseData.access_token,
-            // 	hostedUIBaseUrl: process.env.NEXT_PUBLIC_COGNITO_HOSTED_UI_BASE_URL,
-            // }, this.onGetUserInfo);
+            idpGetUserInfo({
+                accessToken: res.responseData.access_token,
+                hostedUIBaseUrl: `${process.env.NEXT_PUBLIC_OAUTH_DOMAIN_H}`,
+            }, this.onGetUserInfo);
         } else {
             this.errorRedirect();
         }
