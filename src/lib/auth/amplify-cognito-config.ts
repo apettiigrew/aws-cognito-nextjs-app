@@ -36,6 +36,7 @@ Amplify.configure(
   { ssr: true }
 );
 
+// Ensure to call this compnent early in the applicaiton.
 export default function ConfigureAmplifyClientSide() {
   return null;
 }

@@ -18,6 +18,7 @@ export default function RootLayout({ children, }: Readonly<{ children: React.Rea
 
           <ConfigureAuthCognitoApi />
           <ConfigureAmplifyClientSide />
+          
           <DeviceInfoProvider>
             <AuthContextProvicer>
               {children}

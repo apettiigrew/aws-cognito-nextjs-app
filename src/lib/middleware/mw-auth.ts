@@ -1,11 +1,8 @@
-"use server";
-
-import { CognitoJwtVerifier } from "aws-jwt-verify";
 import { CognitoAccessTokenPayload } from "aws-jwt-verify/jwt-model";
 import { NextRequest, NextResponse } from "next/server";
 import { AppEnvironments } from "../app-environments";
-import { getUserSessionData, IdentifyProviderSessionKey } from "../auth/amplify-cognito-config";
-import { getLocalStorageValue, getSessionStorageValue } from "../utils/storage-utils";
+import { COOKIE_USER_AUTH_TOKEN } from "../cookies/cookie-constants";
+import { CognitoJwtVerifier } from "aws-jwt-verify";
 
 /** Single AWS Congito JWK (JSON Web Key) object. Aka, public key data used to verify the incoming JWT (JSON Web Token) */
 type JWK = {
@@ -33,28 +30,34 @@ type JWKSSuccessResponse = {
 };
 
 export async function authenticateAccountRouteRequest(request: NextRequest): Promise<NextResponse | null> {
+	const accessTokenCookieValue = request.cookies.get(COOKIE_USER_AUTH_TOKEN);
+
+	if (typeof accessTokenCookieValue === "undefined") {
+		return buildRedirectToSignInResponse(request);
+	}
+
+	// Verifier that expects valid access tokens:
+	const verifier = CognitoJwtVerifier.create({
+		userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID as string,
+		tokenUse: "access",
+		clientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID as string, 
+	});
+
+	try {
+		const payload = await verifier.verify(accessTokenCookieValue.value);
+		console.log("Token is valid. Payload:", payload);
+	} catch {
+		console.error("Token is invalid. Redirecting to sign in page.");
+		return buildRedirectToSignInResponse(request);
+	}
 
 
-	
-
-	// Cognito JWT Tokens have been verified
 	return null;
 }
 
 function buildRedirectToSignInResponse(request: NextRequest) {
 	const url = new URL(`${request.nextUrl.origin}/login`, request.url);
 	return NextResponse.redirect(url);
-}
-
-
-function logMessage(message: string, ...args: any[]) {
-	if (process.env.NEXT_PUBLIC_APP_ENV !== AppEnvironments.production)
-		console.log(message, args);
-}
-
-function logError(message: string, ...args: any[]) {
-	if (process.env.NEXT_PUBLIC_APP_ENV !== AppEnvironments.production)
-		console.log(message, args);
 }
 
 /**
@@ -197,13 +200,13 @@ function verifyBasicJWTPayload(
 ): boolean {
 	// Verify if it actually was issued by our user pool
 	if (payload.iss !== userPoolBaseUrl) {
-		logError(`Issuer '${payload.iss}' did not match user pool base url '${userPoolBaseUrl}'`);
+		console.log(`Issuer '${payload.iss}' did not match user pool base url '${userPoolBaseUrl}'`);
 		return false;
 	}
 
 	// Verify that the app client id is the equal
 	if (payload.client_id !== userPoolAppClientId) {
-		logError(`client id '${payload.client_id}' does not match user pool client id: '${userPoolAppClientId}'`);
+		console.log(`client id '${payload.client_id}' does not match user pool client id: '${userPoolAppClientId}'`);
 		return false;
 	}
 
@@ -216,7 +219,7 @@ function verifyBasicJWTPayload(
 	// console.log("utcNow:", utcNowSeconds);
 	// console.log("utcNow string:", new Date().toUTCString());
 	if (payload.exp <= utcNowSeconds) {
-		logError(`Token is expired. Timestamp: ${payload.exp}`);
+		console.log(`Token is expired. Timestamp: ${payload.exp}`);
 		return false;
 	}
 

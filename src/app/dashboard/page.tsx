@@ -7,19 +7,20 @@ import { useContext, useEffect } from 'react';
 
 export default function DashboardPage() {
     const router = useRouter();
-    const authContext  = useContext(AuthInfoContext);
+    const authContext = useContext(AuthInfoContext);
     console.log(authContext.user);
     useEffect(() => {
 
         async function handleFetchUserAttributes() {
             try {
                 // console.log("fetching user attributes");
-                // const userAttributes = await fetchUserAttributes();
+                const userAttributes = await fetchUserAttributes();
                 const user = await getCurrentUser();
                 const authSession = await fetchAuthSession()
-                // console.log(userAttributes);
-                // console.log(`dashboard, user: ${user}`);
-                // console.log(`authSession: ${authSession.credentials}`);
+                console.log(userAttributes);
+                // console.log(`userAttributes: ${JSON.parse(userAttributes)}`);
+                console.log(`dashboard: ${user}`);
+                console.log(`authSession: ${authSession}`);
             } catch (error) {
                 console.log(error);
             }

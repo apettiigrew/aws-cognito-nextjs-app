@@ -46,6 +46,8 @@ export function LoginView() {
                 username: String(values.email),
                 password: String(values.password),
             });
+
+            console.log(isSignedIn, nextStep);
             if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
                 await resendSignUpCode({
                     username: String(values.email),
@@ -194,7 +196,7 @@ export function LoginView() {
                                     )
                                 }
                             </Formik>
-                            <Link className={styles["create-account-link"]} href={"/sign-up"}>
+                            <Link className={styles["create-account-link"]} href={"/signup"}>
                                 <p>Create an account</p>
                             </Link>
                         </div>
