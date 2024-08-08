@@ -1,0 +1,54 @@
+@use "./../../styles/utils/index" as u;
+
+.main {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+}
+
+.container {
+    margin: 0 auto;
+    width: 100%;
+    text-align: center;
+    &>form>div {
+        margin-bottom: u.rem(20);
+    }
+
+    @include u.mqw-from(tablet_l) {
+        &>form>div {
+            margin-bottom: u.rem(26);
+        }
+    }
+
+    @include u.mqw-from(desktop_s) {
+        &>form>div {
+            margin-bottom: u.rem(34);
+        }
+    }
+
+    @include u.mqw-from(desktop) {
+        &>form>div {
+            margin-bottom: u.rem(44);
+        }
+    }
+
+    @include u.mqw-from(hr) {
+        &>form>div {
+            margin-bottom: u.px_to_vw(44);
+        }
+    }
+}
+
+.heading {
+    
+    margin-top: u.rem(40);
+
+    @include u.mqw-from(desktop) {
+        margin-top: u.rem(52);
+    }
+
+    @include u.mqw-from(hr) {
+        margin-top: u.px_to_vw(52);
+    }
+
+}

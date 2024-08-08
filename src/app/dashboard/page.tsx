@@ -1,26 +1,23 @@
 "use client";
 import { AuthContextProvicer, AuthInfoContext } from "@/components/providers/auth-context";
-import { fetchAuthSession, fetchUserAttributes, getCurrentUser, signOut, } from "aws-amplify/auth";
+import { Heading } from "@/components/text/subheading";
+import { fetchAuthSession, fetchUserAttributes, FetchUserAttributesOutput, getCurrentUser, signOut, } from "aws-amplify/auth";
 import { useRouter } from 'next/navigation';
-import { useContext, useEffect } from 'react';
-
+import { use, useContext, useEffect, useState } from 'react';
+import styles from './page.module.scss';
+import { AppButton, AppButtonVariation } from "@/components/shared/layout/buttons";
 
 export default function DashboardPage() {
     const router = useRouter();
     const authContext = useContext(AuthInfoContext);
-    // console.log(authContext.user);
+    const [user, setUser] = useState<FetchUserAttributesOutput>();
     useEffect(() => {
 
         async function handleFetchUserAttributes() {
             try {
-                // console.log("fetching user attributes");
+
                 const userAttributes = await fetchUserAttributes();
-                const user = await getCurrentUser();
-                const authSession = await fetchAuthSession()
-                // console.log(userAttributes);
-                // console.log(`userAttributes: ${JSON.parse(userAttributes)}`);
-                // console.log(`dashboard: ${user}`);
-                // console.log(`authSession: ${authSession}`);
+                setUser(userAttributes);
             } catch (error) {
                 console.log(error);
             }
@@ -42,11 +39,22 @@ export default function DashboardPage() {
     }
 
     return (
-        <div>
-            <p>Dashboard page</p>
-            {/* <p>{user}</p> */}
-            {/* <p>{userId}</p> */}
-            <button onClick={handleLogout}>Logout</button>
-        </div>
+        <main className={styles.main}>
+            <div className={styles.container}>
+                <Heading className={styles.heading} headingElement={1}>
+                    Welcome, {user?.name}
+                </Heading>
+                <p>{user?.email}</p>
+
+                <AppButton
+                    type="button"
+                    ariaLabel="Logout button"
+                    variation={AppButtonVariation.primaryDefault}
+                    className={styles.button}
+                    onClick={handleLogout}>
+                    Logout
+                </AppButton>
+            </div>
+        </main>
     )
 }
