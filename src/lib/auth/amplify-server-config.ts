@@ -21,7 +21,7 @@ export async function authenticatedUser(context: NextServer.Context) {
         const user = {
           ...(await getCurrentUser(contextSpec)),
         };
-
+        
         return user;
       } catch (error) {
         return null;

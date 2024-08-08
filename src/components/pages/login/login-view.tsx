@@ -4,7 +4,7 @@ import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/bann
 import { CognitoAPI, setThirdPartyAuthorizeRedirectData } from "@/lib/auth/cognito-api";
 import { getErrorMessage } from "@/lib/get-error-message";
 import cnTowerImg from "@img/cn-tower.jpg";
-import { resendSignUpCode, signIn } from "aws-amplify/auth";
+import { getCurrentUser, resendSignUpCode, signIn } from "aws-amplify/auth";
 import { Form, Formik, FormikValues } from "formik";
 import Image from "next/image";
 import Link from "next/link";
@@ -45,7 +45,7 @@ export function LoginView() {
             const { isSignedIn, nextStep } = await signIn({
                 username: String(values.email),
                 password: String(values.password),
-            });            
+            });
             if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
                 await resendSignUpCode({
                     username: String(values.email),

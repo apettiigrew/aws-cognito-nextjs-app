@@ -1,11 +1,12 @@
 "use client";
-import { AuthContextProvicer, AuthInfoContext } from "@/components/providers/auth-context";
-import { Heading } from "@/components/text/subheading";
-import { fetchAuthSession, fetchUserAttributes, FetchUserAttributesOutput, getCurrentUser, signOut, } from "aws-amplify/auth";
-import { useRouter } from 'next/navigation';
-import { use, useContext, useEffect, useState } from 'react';
-import styles from './page.module.scss';
+import { AuthInfoContext } from "@/components/providers/auth-context";
 import { AppButton, AppButtonVariation } from "@/components/shared/layout/buttons";
+import { Heading } from "@/components/text/subheading";
+import { CognitoAPI } from "@/lib/auth/cognito-api";
+import { fetchUserAttributes, FetchUserAttributesOutput, signOut } from "aws-amplify/auth";
+import { useRouter } from 'next/navigation';
+import { useContext, useEffect, useState } from 'react';
+import styles from './page.module.scss';
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -15,9 +16,15 @@ export default function DashboardPage() {
 
         async function handleFetchUserAttributes() {
             try {
-
-                const userAttributes = await fetchUserAttributes();
-                setUser(userAttributes);
+                if (CognitoAPI.userSessionIsValid) {
+                    setUser({
+                        name: CognitoAPI.getUserAttribute("given_name") || "",
+                        email: CognitoAPI.getUserAttribute("email") || ""
+                    })
+                } else {
+                    const userAttributes = await fetchUserAttributes();
+                    setUser(userAttributes);
+                }
             } catch (error) {
                 console.log(error);
             }

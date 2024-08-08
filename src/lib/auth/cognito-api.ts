@@ -3,7 +3,7 @@ import { CognitoAccessToken, CognitoIdToken, CognitoUser, CognitoUserPool, Cogni
 import { CognitoIdTokenPayload } from "aws-jwt-verify/jwt-model";
 import { getLocalStorageValue, removeLocalStorageValue, setLocalStorageValue, setSessionStorageValue } from "../utils/storage-utils";
 import { isValidUrl } from "../utils/url-utils";
-import { AuhtorizeUrlBuildArguments, AWSCognitoError, BuildIdpSignInUrlArgs, COGNITO_IDENTITY_PROVIDERS, CognitoAuthorizeCodeForTokenErrorResponse, CognitoAuthorizeCodeForTokenSuccessResponse, CognitoIdpSignInUrlBuildResult, CognitoIdpTokenExchangeParams, CognitoIdpTokenExchangeResponse, CognitoIdpUserInfoErrorResponse, CognitoIdpUserInfoResponse, CognitoUserExtended, CognitoUserState, GetUserInfoArgs } from "./cognito-api-types";
+import { AuhtorizeUrlBuildArguments, AWSCognitoError, BuildIdpSignInUrlArgs, COGNITO_IDENTITY_PROVIDERS, COGNITO_STANDARD_ATTRIBUTES, CognitoAuthorizeCodeForTokenErrorResponse, CognitoAuthorizeCodeForTokenSuccessResponse, CognitoIdpSignInUrlBuildResult, CognitoIdpTokenExchangeParams, CognitoIdpTokenExchangeResponse, CognitoIdpUserInfoErrorResponse, CognitoIdpUserInfoResponse, CognitoUserExtended, CognitoUserState, GetUserInfoArgs } from "./cognito-api-types";
 import { SocialIdentityProviderCodes } from "./social-identity";
 
 type CognitoAPIInitConfig = {
@@ -242,8 +242,41 @@ function urlEncodeBase64String(base64String: string) {
 	return result;
 }
 
+function userSessionStateIsValid() {
+	if (state.user === null)
+		return false;
+	if (state.userSession === null || !state.userSession.isValid())
+		return false;
+
+	return true;
+}
+
+
 
 export class CognitoAPI {
+	static get userState(): CognitoUserState {
+		return state;
+	}
+
+	static get userSessionIsValid(): boolean {
+		return userSessionStateIsValid();
+	}
+
+	static getUserAttribute(attributeName: COGNITO_STANDARD_ATTRIBUTES): string | null {
+		if (state.user === null)
+			return null;
+
+		if (Array.isArray(state.userData.UserAttributes)) {
+			const val = state.userData.UserAttributes.find((att: { Name: string; }) => att.Name === attributeName);
+			if (typeof val === "undefined")
+				return null;
+
+			return val.Value;
+		}
+
+		return null;
+	}
+
 	static init(config: CognitoAPIInitConfig) {
 		if (typeof window === "undefined") {
 			console.log("Cognito can only run in the browser!");
