@@ -177,7 +177,7 @@ export function LoginView() {
                                                         <small className={"border-text"}>or</small>
                                                         <hr className={styles.line} />
                                                     </div>
-                                                    <AppButton
+                                                    {/* <AppButton
                                                         // disabled={!sValid}
                                                         type="button"
                                                         ariaLabel="Submit button"
@@ -187,7 +187,7 @@ export function LoginView() {
                                                     >
                                                         <GoogleIcon className={styles["button-icon"]} />
                                                         Continue With Google
-                                                    </AppButton>
+                                                    </AppButton> */}
                                                 </Form>
                                             </div>
                                         </>
