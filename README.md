@@ -9,7 +9,7 @@
 <img src="https://img.shields.io/github/last-commit/apettiigrew/aws-cognito-nextjs-app" alt="last update" />
 </a>
 </p>
-<h4>[Feature Request](https://github.com/apettiigrew/nextjs-multi-step-form-with-formik/issues/)</h4>
+<h4>[Feature Request](https://github.com/apettiigrew/aws-cognito-nextjs-app/issues/)</h4>
 </div>
 
 <br />
@@ -51,8 +51,8 @@ Users should be able to perform the following using AWS Cognito
 
 ## :wave: Contributing
 
-<a href="https://github.com/apettiigrew/nextjs-multi-step-form-with-formik/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=apettiigrew/nextjs-multi-step-form-with-formik" />
+<a href="https://github.com/apettiigrew/aws-cognito-nextjs-app/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=apettiigrew/aws-cognito-nextjs-app" />
 </a>
 
 Contributions are always welcome!
