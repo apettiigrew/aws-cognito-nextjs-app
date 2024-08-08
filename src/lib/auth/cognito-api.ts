@@ -328,9 +328,6 @@ export class CognitoAPI {
 					state.initialized = true;
 					updateState();
 				} else {
-					// console.log("on Get User Info response:", res);
-
-					// Convert response object to attributes
 					// https://docs.aws.amazon.com/cognito/latest/developerguide/userinfo-endpoint.html#get-userinfo-response-sample
 					const entries = Object.entries(res);
 					const attributes: ICognitoUserAttributeData[] = [];
@@ -349,8 +346,6 @@ export class CognitoAPI {
 						Username: savedUser?.getUsername() || "",
 					};
 
-					// console.log("newUserData:", newUserdata);
-
 					updateStateUserData(newUserdata);
 					state.initialized = true;
 					updateState();
@@ -360,18 +355,10 @@ export class CognitoAPI {
 			if (session !== null && typeof session !== "undefined") {
 				state.userSession = session;
 				const valid = session.isValid();
-
-				// console.log("Loaded existing user session:", session);
-				// console.log("Existing session is valid:", valid);
-
-				// If existing user (session) is valid -> fetch user data
+				
 				if (state.user !== null && session.isValid()) {
-					// Fire access token update event
 					fireAccessTokenUpdatedEvent(session.getAccessToken());
-					// Check if user is federated
 					state.isFederatedUser = checkIfFederatedUser(session.getIdToken());
-					// console.log("Is federated user:", state.isFederatedUser);
-
 					if (!state.isFederatedUser) {
 						state.user.getUserData(onGetUserData as NodeCallback<Error, UserData>);
 					} else {
@@ -381,19 +368,16 @@ export class CognitoAPI {
 						}, onGetUserInfo);
 					}
 				} else {
-					// Else, call update state with invalid session
 					state.initialized = true;
 					updateState();
 				}
 			} else if (error !== null) {
 				console.error("onGetUserSession error:", error);
-				// logError("onGetUserSession json:", JSON.stringify(error));
 				state.initialized = true;
 				updateState();
 			}
 
 		});
-		// console.log("Cognito is completed initilization");
 	}
 
 	/**
@@ -442,9 +426,6 @@ export class CognitoAPI {
 	 * @read https://docs.aws.amazon.com/cognito/latest/developerguide/federation-endpoints.html
 	 */
 	static idpSignInUser(userName: string, sessionData: ICognitoUserSessionData, userInfo: Record<string, any>) {
-		// console.log("idpSignInUser:", userName);
-		// console.log("userPool:", userPool);
-
 		const user = new CognitoUser({ Username: userName, Pool: userPool }) as CognitoUserExtended;
 		state.user = user;
 		state.isFederatedUser = true;
@@ -453,10 +434,8 @@ export class CognitoAPI {
 		state.userSession = userSession;
 		user.setSignInUserSession(userSession);
 
-		// Fire Cognito Access Token event
 		fireAccessTokenUpdatedEvent(userSession.getAccessToken());
 
-		// Convert response from /oauth2/userInfo to user attributes
 		const entries = Object.entries(userInfo);
 		const attributes: ICognitoUserAttributeData[] = [];
 		for (let i = 0; i < entries.length; i++) {
