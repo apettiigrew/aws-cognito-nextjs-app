@@ -570,5 +570,32 @@ export class CognitoAPI {
 			});
 		});
 	}
+
+	/**
+	 * Signs out the current user. Cleans up any stored local data,
+	 * as well as revoking the current access/refresh tokens in the Cognito backend.
+	 *
+	 * @see https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_RevokeToken.html
+	 */
+	static signOutUser(callback: () => void) {
+		if (state.user === null)
+			return;
+		if (state.userSession === null)
+			return;
+
+		state.user.signOut(() => {
+			state.user = null;
+			state.userSession = null;
+			state.isFederatedUser = false;
+			state.userData = {
+				UserAttributes: null,
+				PreferredMfaSetting: null,
+				MFAOptions: [],
+				UserMFASettingList: [],
+				Username: null,
+			};
+			callback();
+		});
+	}
 }
 

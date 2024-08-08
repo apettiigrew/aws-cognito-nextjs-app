@@ -5,8 +5,9 @@ import { Heading } from "@/components/text/subheading";
 import { CognitoAPI } from "@/lib/auth/cognito-api";
 import { fetchUserAttributes, FetchUserAttributesOutput, signOut } from "aws-amplify/auth";
 import { useRouter } from 'next/navigation';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import styles from './page.module.scss';
+import { clearCustomerAccessTokenCookie } from "@/lib/cookies/cookie-utils";
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -34,15 +35,23 @@ export default function DashboardPage() {
         // getUser();
     }, [])
 
+    const federatedSignOut = useCallback(() => {
+        clearCustomerAccessTokenCookie();
+        router.push('/login');
+    }, [router]);
 
     function handleLogout() {
-        // console.log("logout button clicked");
-        signOut().then(() => {
-            router.push('/login');
+
+        if (CognitoAPI.userSessionIsValid) {
+            CognitoAPI.signOutUser(federatedSignOut)
+        } else {
+            signOut().then(() => {
+                router.push('/login');
+            }
+            ).catch((error) => {
+                router.push('/login');
+            });
         }
-        ).catch((error) => {
-            router.push('/login');
-        });
     }
 
     return (
