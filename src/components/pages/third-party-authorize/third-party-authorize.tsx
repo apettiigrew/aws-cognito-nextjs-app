@@ -93,7 +93,7 @@ class ThirdPartyAuthorizationHandler {
         }
 
         // Has to be exact same that was sent to the authorize request!
-        const redirectUri = `${process.env.NEXT_PUBLIC_BASE_APP_URL}/third-party-authorize/`;
+        const redirectUri = `${process.env.NEXT_PUBLIC_APP_BASEURL}/third-party-authorize/`;
 
         const codeVerifierKey = `codeVerifier-${state}`;
         const codeVerifier = getSessionStorageValue(codeVerifierKey);
@@ -106,13 +106,13 @@ class ThirdPartyAuthorizationHandler {
         // console.log("Code verifier:", codeVerifier);
         // console.log("Code:", code);
         // console.log("Redirect URI:", redirectUri);
-        // console.log("Client ID:", process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID);
-        // console.log("Hosted UI Base URL:", process.env.NEXT_PUBLIC_OAUTH_DOMAIN_H);
+        // console.log("Client ID:", process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID);
+        // console.log("Hosted UI Base URL:", process.env.NEXT_PUBLIC_COGNITO_OAUTH_DOMAIN);
 
         // Send the actual request
         CognitoAPI.requestIdpOauthToken({
-            hostedUIBaseUrl: `${process.env.NEXT_PUBLIC_OAUTH_DOMAIN_H}`,
-            clientId: `${process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID}`,
+            hostedUIBaseUrl: `https://${process.env.NEXT_PUBLIC_COGNITO_OAUTH_DOMAIN}`,
+            clientId: `${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}`,
             redirectUri: redirectUri,
             code: code,
             codeVerifier: codeVerifier,
@@ -164,7 +164,7 @@ class ThirdPartyAuthorizationHandler {
             this._tokenSuccessData = res.responseData;
             CognitoAPI.idpGetUserInfo({
                 accessToken: res.responseData.access_token,
-                hostedUIBaseUrl: `${process.env.NEXT_PUBLIC_OAUTH_DOMAIN_H}`,
+                hostedUIBaseUrl: `https://${process.env.NEXT_PUBLIC_COGNITO_OAUTH_DOMAIN}`,
             }, this.onGetUserInfo);
         } else {
             this.errorRedirect();

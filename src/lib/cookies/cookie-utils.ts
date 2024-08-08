@@ -7,8 +7,6 @@ import { AppEnvironments } from "../app-environments";
 /** Global instance of {@link Cookies} */
 export const globalCookies = new Cookies();
 
-
-
 export function getCookie(key: string, options?: CookieGetOptions) {
 	return globalCookies.get<string>(key, options);
 }

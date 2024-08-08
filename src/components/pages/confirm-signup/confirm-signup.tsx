@@ -5,13 +5,13 @@ import { MessageBanner, SigninErrorTypes } from "@/components/shared/layout/bann
 import { AppButton, AppButtonVariation } from "@/components/shared/layout/buttons";
 import { InputField } from "@/components/shared/layout/input-field";
 import { SubHeading } from "@/components/text/subheading";
-import { AWSInitiateAuthError } from "@/lib/auth/cognito-api";
 import { autoSignIn, confirmSignUp, resendSignUpCode } from "aws-amplify/auth";
 import { Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import { useCallback, useContext, useState } from "react";
 import * as Yup from "yup";
 import styles from "./confirm-signup.module.scss";
+import { AWSInitiateAuthError } from "@/lib/auth/cognito-api-types";
 
 interface FormValues {
     email: string;

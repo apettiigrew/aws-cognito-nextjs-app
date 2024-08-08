@@ -39,9 +39,9 @@ export async function authenticateAccountRouteRequest(request: NextRequest): Pro
 
 	// Verifier that expects valid access tokens:
 	const verifier = CognitoJwtVerifier.create({
-		userPoolId: process.env.NEXT_PUBLIC_USER_POOL_ID as string,
+		userPoolId: process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID as string,
 		tokenUse: "access",
-		clientId: process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID as string, 
+		clientId: process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID as string, 
 	});
 
 	try {

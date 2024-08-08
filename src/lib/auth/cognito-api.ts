@@ -462,10 +462,10 @@ export class CognitoAPI {
 		const authorizeUrl = buildAuthorizeUrl({
 			responseType: "code",
 			provider: args.provider,
-			clientId: `${process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID}`,
+			clientId: `${process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID}`,
 			state: nonce,
 			redirect_uri: args.redirectUri,
-			hostedUIBaseUrl: `https://${process.env.NEXT_PUBLIC_OAUTH_DOMAIN}`,
+			hostedUIBaseUrl: `https://${process.env.NEXT_PUBLIC_COGNITO_OAUTH_DOMAIN}`,
 			code_challenge: base64Encoded,
 			scope: scopes.join(" "),
 		});

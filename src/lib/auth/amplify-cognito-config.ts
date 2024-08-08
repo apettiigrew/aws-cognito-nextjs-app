@@ -10,18 +10,19 @@ import { scopes } from "./cognito-api";
  */
 export const authConfig: ResourcesConfig["Auth"] = {
   Cognito: {
-    userPoolId: String(process.env.NEXT_PUBLIC_USER_POOL_ID),
-    userPoolClientId: String(process.env.NEXT_PUBLIC_USER_POOL_CLIENT_ID),
+    userPoolId: String(process.env.NEXT_PUBLIC_COGNITO_USER_POOL_ID),
+    userPoolClientId: String(process.env.NEXT_PUBLIC_COGNITO_CLIENT_ID),
     loginWith: {
       oauth: {
-        domain: String(process.env.NEXT_PUBLIC_OAUTH_DOMAIN),
+        // This should not include any protocol just the domain name.
+        domain: String(process.env.NEXT_PUBLIC_COGNITO_OAUTH_DOMAIN),
         // Ensure the scope matches the one in the Cognito User Pool
         scopes: scopes,
         redirectSignIn: [
-          `${process.env.NEXT_PUBLIC_BASE_APP_URL}/dashboard/`,
+          `${process.env.NEXT_PUBLIC_APP_BASEURL}/dashboard/`,
         ],
         redirectSignOut: [
-          `${process.env.NEXT_PUBLIC_BASE_APP_URL}/login/`,
+          `${process.env.NEXT_PUBLIC_APP_BASEURL}/login/`,
         ],
         responseType: "code",
       }
@@ -33,10 +34,15 @@ Amplify.configure(
   {
     Auth: authConfig,
   },
+  // enable cookies for state storage
   { ssr: true }
 );
 
 // Ensure to call this compnent early in the applicaiton.
-export default function ConfigureAmplifyClientSide() {
+export default function AmplifyCognitoConfig() {
+  // This component require no ui elements.
   return null;
 }
+
+
+

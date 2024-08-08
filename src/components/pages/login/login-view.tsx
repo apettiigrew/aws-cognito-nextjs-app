@@ -45,9 +45,7 @@ export function LoginView() {
             const { isSignedIn, nextStep } = await signIn({
                 username: String(values.email),
                 password: String(values.password),
-            });
-
-            // console.log(isSignedIn, nextStep);
+            });            
             if (nextStep.signInStep === "CONFIRM_SIGN_UP") {
                 await resendSignUpCode({
                     username: String(values.email),
@@ -94,7 +92,7 @@ export function LoginView() {
              */
             /** signInWithRedirect({ provider: "Google" }); */
 
-            const baseUrl = process.env.NEXT_PUBLIC_BASE_APP_URL;
+            const baseUrl = process.env.NEXT_PUBLIC_APP_BASEURL;
             const successRedirect = new URL(baseUrl + "/dashboard");
             const errorRedirect = new URL(baseUrl + "/login?err_code=something-went-wrong");
 

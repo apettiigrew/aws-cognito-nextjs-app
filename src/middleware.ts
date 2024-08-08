@@ -1,9 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { authenticatedUser } from "./lib/auth/amplify-server-utils";
+import { authenticatedUser } from "./lib/auth/amplify-server-config";
 import { authenticateAccountRouteRequest } from "./lib/middleware/mw-auth";
 
 
 const protectedRoutes = ["/dashboard"];
+const unProtectedRoutes = ["/login", "/signup", "/fogot-password/submit", "/fogot-password/confirm", "/confirm-signup"];
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const path = request.nextUrl.pathname;
@@ -16,25 +17,32 @@ export async function middleware(request: NextRequest) {
   // Check if the user is federated
   const federatedAuthTest = await authenticateAccountRouteRequest(request);
   const isFederatedAuthenticated = federatedAuthTest === null;
+  const isAuthenticated = isCogntioAuthenticated || isFederatedAuthenticated;
 
-  if (path === home && (isCogntioAuthenticated || isFederatedAuthenticated)) {
+  if ((path === home || unProtectedRoutes.includes(path)) && isAuthenticated) {
+    console.log("Redirecting to dashboard view user is authenticated");
+    console.log(`isCogntioAuthenticated = ${isCogntioAuthenticated}`);
+    console.log(`isFederatedAuthenticated = ${isFederatedAuthenticated}`);
     return NextResponse.redirect(new URL("/dashboard", request.nextUrl));
   }
 
-  // Check if it's an third party authorize callback
-  if (path === "/third-party-authorize") {
-    const searchParams = request.nextUrl.searchParams;
-    if (searchParams.has("code") && searchParams.has("state")) {
-      // E.g. http://localhost:3002/third-party-authorize?code=<string>&state=<string>
-      return response;
-    } else if (searchParams.has("error")) {
-      // E.g. http://localhost:3002/third-party-authorize?error_description=<description of error>&state=<string>&error=invalid_request
-      return response;
-    }
-  }
+  // // Check if it's an third party authorize callback
+  // if (path === "/third-party-authorize") {
+  //   const searchParams = request.nextUrl.searchParams;
+  //   if (searchParams.has("code") && searchParams.has("state")) {
+  //     // E.g. http://localhost:3002/third-party-authorize?code=<string>&state=<string>
+  //     return response;
+  //   } else if (searchParams.has("error")) {
+  //     // E.g. http://localhost:3002/third-party-authorize?error_description=<description of error>&state=<string>&error=invalid_request
+  //     return response;
+  //   }
+  // }
 
   if (protectedRoutes.includes(path)) {
-    if (!isFederatedAuthenticated || !isFederatedAuthenticated) {
+    if (isAuthenticated == false) {
+      console.log("Redirecting to Login user is not authenticated");
+      console.log(`isCogntioAuthenticated = ${isCogntioAuthenticated}`);
+      console.log(`isFederatedAuthenticated = ${isFederatedAuthenticated}`);
       return NextResponse.redirect(new URL("/login", request.nextUrl));
     }
   }
