@@ -17,6 +17,7 @@
 ## :star2: About the Project
 
 This project illustrates how to integrate AWS Cognito using Amplify with NextJs. There is blog post that supports how this was done as this project will not work without setting up the AWS User pools.
+Blog Post: https://www.linkedin.com/pulse/complete-guide-implement-aws-cognito-using-amplify-nextjs-pettigrew-e1xic/
 
 Users should be able to perform the following using AWS Cognito
 - Create an account
