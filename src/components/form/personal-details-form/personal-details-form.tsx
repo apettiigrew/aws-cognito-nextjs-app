@@ -30,7 +30,7 @@ export function PersonalDetailsForm(props: PersonalDetailsFormProps) {
                 <React.Fragment>
                     <div className={styles["right-content-headings"]}>
                         <SubHeading>Personal Details</SubHeading>
-                        <p>Enter your perosnal information to continue to checkout.</p>
+                        <p>Enter your personal information to continue to checkout.</p>
                     </div>
                 </React.Fragment>
                 <React.Fragment>
